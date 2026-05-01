@@ -1,4 +1,5 @@
 #include "Game.h"
+#include <tonc.h>
 
 /**
  * @brief Constructs a Game and initializes its state pointer.
@@ -16,6 +17,7 @@ Game::Game() : currentState(nullptr) {
         }
     }
     profile.exploredRooms[0][0] = true;
+    this->load();
 }
 
 /**
@@ -71,4 +73,25 @@ void Game::draw() {
     if (currentState) {
         currentState->draw();
     }
+}
+
+void Game::load() {
+    SaveBlock tempSave;
+    // Read from SRAM physical address
+    sram_read(&tempSave, (const void*)0x0E000000, sizeof(SaveBlock));
+
+    // 0x4742414D is "GBAM" in hex
+    if (tempSave.magicSignature == 0x4742414D) {
+        this->profile = tempSave.profile;
+    }
+    // If the signature doesn't match, we keep the default values set in the constructor.
+}
+
+void Game::save() {
+    SaveBlock newSave;
+    newSave.magicSignature = 0x4742414D;
+    newSave.profile = this->profile;
+
+    // Write to SRAM physical address
+    sram_write((void*)0x0E000000, &newSave, sizeof(SaveBlock));
 }
