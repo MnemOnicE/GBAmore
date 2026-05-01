@@ -15,6 +15,16 @@ State_Level1::State_Level1() : game(nullptr), inCutscene(false) {
 State_Level1::~State_Level1() {
 }
 
+/**
+ * @brief Initialize Level 1 state and configure graphics, UI, and player sprite.
+ *
+ * Sets the active game context, clears cutscene state, prepares on-screen text,
+ * initializes and uploads sprite graphics and palette to object VRAM, configures
+ * the player sprite's OAM attributes and position, enables sprite rendering and
+ * 1D object mapping, and loads the level background into VRAM.
+ *
+ * @param gameContext Pointer to the active Game instance used by this state.
+ */
 void State_Level1::init(Game* gameContext) {
     this->game = gameContext;
     inCutscene = false;
@@ -59,6 +69,15 @@ void State_Level1::init(Game* gameContext) {
 
 }
 
+/**
+ * @brief Process input, update the player sprite, and handle state transitions for Level 1.
+ *
+ * Processes controller input to move the player sprite and clamps its position to the screen.
+ * While not in a cutscene, directional keys move the player (2 px per update) and SELECT immediately transitions to the map state.
+ * When the player is inside the Agate trigger region (x ∈ [112,128), y ∈ [16,32)) pressing A starts the Level‑end cutscene:
+ * it sets `inCutscene`, increments `game->profile.agatesCollected`, clears and prints the Agate UI messages, and disables OBJ rendering.
+ * While in a cutscene, pressing A transitions to the Nest state; all other input and movement are ignored.
+ */
 void State_Level1::update() {
     if (inCutscene) {
         if (key_hit(KEY_A)) {
@@ -115,6 +134,12 @@ void State_Level1::draw() {
     }
 }
 
+/**
+ * @brief Tear down Level 1 state and restore display hardware to a neutral state.
+ *
+ * Clears the on-screen UI, removes sprites from object attribute memory, and
+ * disables object rendering and background 1 by updating display control flags.
+ */
 void State_Level1::teardown() {
 
     UI::clear();
