@@ -78,7 +78,7 @@ void Game::draw() {
 
 void Game::load() {
     SaveBlock tempSave;
-    // Read from SRAM physical address
+    sram_read(&tempSave, SRAM, sizeof(SaveBlock));
     u8* src = (u8*)0x0E000000;
     u8* dst = (u8*)&tempSave;
     for (u32 i = 0; i < sizeof(SaveBlock); ++i) {
