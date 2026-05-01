@@ -35,7 +35,7 @@
 
 ## Phase 9: The Audio Engine (Maxmod)
 **Goal:** Integrate the Maxmod library to handle background music (BGM) and sound effects (SFX) without stalling the CPU.
-*   **Makefile Modification:** Introduce the Maxmod audio processing rules to the `Makefile`. Configure the pipeline to convert audio assets placed in an `audio/` directory into a compiled `soundbank.bin`.
+*   **Makefile Modification:** Enable the Maxmod pipeline by defining the MUSIC directory and linking libmaxmod in the Makefile. Configure the build to convert audio assets into a compiled soundbank.bin.
 *   **Asset Pipeline:** 
     *   **BGM:** Utilize tracker formats (`.mod`, `.it`, or `.s3m`) for the lo-fi boom-bap loops. Tracker formats are hardware-efficient and save massive amounts of ROM space compared to raw audio.
     *   **SFX:** Utilize standard `.wav` files for short UI interactions (menu blips, agate collection chimes).
