@@ -13,12 +13,26 @@
 
 State_Level1 State_Level1::instance;
 
+/**
+ * @brief Initialize the Level 1 state with default member values.
+ *
+ * Sets the game context pointer to nullptr and clears the cutscene flag.
+ */
 State_Level1::State_Level1() : game(nullptr), inCutscene(false) {
 }
 
 State_Level1::~State_Level1() {
 }
 
+/**
+ * @brief Initialize Level 1 state with its graphics, entities, and game context.
+ *
+ * Sets up the level's UI text, loads player and shadow sprite tiles and palettes,
+ * initializes the entity array (player and patrolling shadow), enables object
+ * rendering, prepares the shadow OAM buffer, and loads the BG for Level 1.
+ *
+ * @param gameContext Pointer to the current Game instance used by the state.
+ */
 void State_Level1::init(Game* gameContext) {
     this->game = gameContext;
     inCutscene = false;
@@ -61,6 +75,15 @@ void State_Level1::init(Game* gameContext) {
     Background::load(bg_level1Tiles, bg_level1TilesLen, bg_level1Map, bg_level1MapLen, bg_level1Pal, bg_level1PalLen, 1, 29, 1, false);
 }
 
+/**
+ * @brief Determines whether two active entities' axis-aligned bounding boxes overlap.
+ *
+ * Checks that both entities are marked active and that their rectangular bounds intersect.
+ *
+ * @param a First entity to test.
+ * @param b Second entity to test.
+ * @return true if both entities are active and their bounding rectangles overlap, false otherwise.
+ */
 bool State_Level1::checkCollision(Entity& a, Entity& b) {
     if (!a.active || !b.active) return false;
     return (a.x < b.x + b.width &&
@@ -69,6 +92,11 @@ bool State_Level1::checkCollision(Entity& a, Entity& b) {
             a.y + a.height > b.y);
 }
 
+/**
+ * @brief Updates Level 1 state: input, movement, camera, entities, collisions, and win transition.
+ *
+ * Processes player input and applies movement with screen-edge clamping, recenters and clamps the camera to the 256×256 map and scrolls the background, advances the patrolling shadow entity, and checks collisions (collision with the shadow resets the player and plays the hurt SFX). Handles immediate state transitions: Select opens the map; interacting with the goal region by pressing A plays the level-up SFX, increments the profile's agate count, enters a cutscene that disables sprites and shows the completion UI; when already in the cutscene pressing A returns to the Nest state.
+ */
 void State_Level1::update() {
     if (inCutscene) {
         if (key_hit(KEY_A)) {
@@ -102,8 +130,8 @@ void State_Level1::update() {
     if (entities[0].y < 0) entities[0].y = 0;
     if (entities[0].y > 256 - 16) entities[0].y = 256 - 16;
 
-    camera_x = entities[0].x - (240 / 2) + (16 / 2); // Center X
-    camera_y = entities[0].y - (160 / 2) + (16 / 2); // Center Y
+    int camera_x = entities[0].x - (240 / 2) + (16 / 2); // Center X
+    int camera_y = entities[0].y - (160 / 2) + (16 / 2); // Center Y
 
     // Clamp camera to the 256x256 map bounds
     if (camera_x < 0) camera_x = 0;
@@ -141,6 +169,14 @@ void State_Level1::update() {
     }
 }
 
+/**
+ * @brief Renders active entity sprites into OAM and updates hardware OAM for the current camera.
+ *
+ * When not in a cutscene, computes a camera centered on the player and clamped to the map,
+ * populates the shadow OAM buffer with up to `num_entities` active entities (setting palette,
+ * shape/size, and screen position) and hides remaining OAM slots, then copies the buffer to
+ * hardware OAM so sprites are drawn with the current camera offset.
+ */
 void State_Level1::draw() {
     // Nothing to do for now, handled by TTE printing directly
 
@@ -170,6 +206,11 @@ void State_Level1::draw() {
     }
 }
 
+/**
+ * @brief Tear down Level 1 and restore display state for the next scene.
+ *
+ * Resets background scroll to (0,0), clears UI text, clears the shadow OAM buffer and copies it to hardware to remove sprites, and disables object rendering and background 1 so subsequent states start with a clean display.
+ */
 void State_Level1::teardown() {
     // Reset background scroll to prevent bleeding into other states
     REG_BG1HOFS = 0;
