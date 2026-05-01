@@ -105,9 +105,11 @@ endif
 
 export OFILES_BIN := $(addsuffix .o,$(BINFILES))
 
-export SFILES	+=	$(patsubst %.png,%.s,$(notdir $(wildcard $(foreach dir,$(GRAPHICS),$(dir)/*.png))))
-export SFILES	+=	$(patsubst %.bmp,%.s,$(notdir $(wildcard $(foreach dir,$(GRAPHICS),$(dir)/*.bmp))))
+
+
 export OFILES_SOURCES := $(CPPFILES:.cpp=.o) $(CFILES:.c=.o) $(SFILES:.s=.o)
+export OFILES_SOURCES += $(patsubst %.png,%.o,$(notdir $(wildcard $(foreach dir,$(GRAPHICS),$(dir)/*.png))))
+export OFILES_SOURCES += $(patsubst %.bmp,%.o,$(notdir $(wildcard $(foreach dir,$(GRAPHICS),$(dir)/*.bmp))))
 
 export OFILES := $(OFILES_BIN) $(OFILES_SOURCES)
 
