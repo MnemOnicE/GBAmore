@@ -1,0 +1,26 @@
+name: Build GBA ROM
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: devkitpro/devkitarm
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Compile the game
+      run: make
+
+    - name: Upload GBA Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: GBAmore-ROM
+        path: GBAmore.gba
+        if-no-files-found: error
