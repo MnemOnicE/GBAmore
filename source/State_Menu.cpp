@@ -43,9 +43,10 @@ void State_Menu::init(Game* gameContext) {
 }
 
 /**
- * @brief Polls input and transitions the game's state to Level 1 when START is pressed.
+ * @brief Handles menu input and switches the game to the nest state when START is pressed.
  *
- * When the START button is detected, replaces the current game state with a new State_Level1 instance.
+ * Polls for the START button and, if detected, instructs the game to change its current state
+ * to the singleton instance of State_Nest.
  */
 void State_Menu::update() {
     if (key_hit(KEY_START)) {

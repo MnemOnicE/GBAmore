@@ -7,12 +7,32 @@
 
 State_Nest State_Nest::instance;
 
+/**
+ * @brief Constructs a State_Nest and initializes its internal state.
+ *
+ * Initializes the state's members: sets `game` to `nullptr`, `selectedOption` to `0`,
+ * and `viewingCollection` to `false`.
+ */
 State_Nest::State_Nest() : game(nullptr), selectedOption(0), viewingCollection(false) {
 }
 
+/**
+ * @brief Destructor for State_Nest.
+ *
+ * Performs no cleanup; provided for completeness and potential future use.
+ */
 State_Nest::~State_Nest() {
 }
 
+/**
+ * @brief Initialize the Nest state with the provided game context and render its menu.
+ *
+ * Resets menu state (selection and collection view), stores the game context for later
+ * state transitions and profile access, disables sprite/object display layers so the
+ * screen is text-only, clears the UI, and draws the initial menu.
+ *
+ * @param gameContext Pointer to the current Game instance used for state changes and profile data.
+ */
 void State_Nest::init(Game* gameContext) {
     this->game = gameContext;
     selectedOption = 0;
@@ -25,6 +45,15 @@ void State_Nest::init(Game* gameContext) {
     drawMenu();
 }
 
+/**
+ * @brief Render the Nest menu and collection screen to the UI.
+ *
+ * Clears the current UI and draws the Nest header including the player's agate count,
+ * then either renders the collection view (showing how many of 5 pieces are held and a prompt to return)
+ * or renders the two-option menu with a cursor marker placed according to `selectedOption`.
+ *
+ * Observes member state: `game->profile.agatesCollected`, `viewingCollection`, and `selectedOption`.
+ */
 void State_Nest::drawMenu() {
     UI::clear();
     char buf[64];
@@ -47,6 +76,14 @@ void State_Nest::drawMenu() {
     }
 }
 
+/**
+ * @brief Processes player input for the Nest menu and updates the menu state.
+ *
+ * When the collection view is active, pressing B returns to the main menu. When the collection view is inactive,
+ * UP or DOWN toggles the selected menu option; A either opens the collection view or transitions the game to Level 1.
+ * Side effects: updates `viewingCollection` and `selectedOption`, redraws the menu via `drawMenu()`, and may change
+ * the game's state via `game->changeState(...)`.
+ */
 void State_Nest::update() {
     if (viewingCollection) {
         if (key_hit(KEY_B)) {
@@ -70,9 +107,20 @@ void State_Nest::update() {
     }
 }
 
+/**
+ * @brief Performs no per-frame rendering for the Nest state.
+ *
+ * This method is intentionally empty; the Nest state performs UI updates immediately
+ * in its initialization and input-handling code rather than in a per-frame draw call.
+ */
 void State_Nest::draw() {
 }
 
+/**
+ * @brief Clean up UI when exiting the Nest state.
+ *
+ * Clears all on-screen UI elements and text to leave the display in a neutral state.
+ */
 void State_Nest::teardown() {
     UI::clear();
 }

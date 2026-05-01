@@ -1,9 +1,11 @@
 #include "Game.h"
 
 /**
- * @brief Constructs a Game and initializes its state pointer.
+ * @brief Construct a Game and initialize its runtime state.
  *
- * Initializes the Game instance with no active state (sets `currentState` to `nullptr`).
+ * Initializes the Game with no active state and a default player profile:
+ * `currentState` is set to `nullptr`, `profile.agatesCollected` is set to 0,
+ * and `profile.canDash` is set to false.
  */
 Game::Game() : currentState(nullptr) {
     profile.agatesCollected = 0;
@@ -11,9 +13,10 @@ Game::Game() : currentState(nullptr) {
 }
 
 /**
- * @brief Cleans up the current game state and frees associated resources.
+ * @brief Destroys the Game and runs teardown on the active game state.
  *
- * If a current state exists, calls its teardown routine and deletes it.
+ * If an active `currentState` exists, its `teardown()` method is invoked to allow the state to release resources.
+ * The destructor does not delete or take ownership of `currentState`.
  */
 Game::~Game() {
     if (currentState) {
@@ -23,17 +26,16 @@ Game::~Game() {
 }
 
 /**
- * @brief Replace the game's current state with a new state and initialize it.
+ * @brief Replace the game's current state and initialize the new state.
  *
- * If a current state exists, it is torn down and deleted before assignment.
- * After assigning `newState`, the state's `init(this)` is called when `newState` is non-null.
+ * If a current state exists, its teardown() is called before replacing it; this function does not delete the previous state. After assignment, if `newState` is non-null its init(this) is invoked. Passing `nullptr` clears the current state.
  *
- * @param newState Pointer to the new GameState to become the active state. Ownership is transferred to the Game; the Game will call `teardown()` and delete the previous state if present. Passing `nullptr` clears the current state.
+ * @param newState Pointer to the new GameState to become active. Ownership is not taken by Game; callers are responsible for managing the state's lifetime.
  */
 void Game::changeState(GameState* newState) {
     if (currentState) {
         currentState->teardown();
-        // Transition to the new state. Static instances are used to avoid dynamic allocation.
+         // Assuming the game owns the state memory and states are dynamically allocated. For now, we assume simple pointer transfer
     }
 
     currentState = newState;
