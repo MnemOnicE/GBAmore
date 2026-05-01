@@ -1,0 +1,25 @@
+name: Release GBA ROM
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    container: devkitpro/devkitarm
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Compile the game
+        run: make
+
+      - name: Create Release and Upload ROM
+        uses: softprops/action-gh-release@v2
+        with:
+          files: GBAmore.gba
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
