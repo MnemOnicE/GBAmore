@@ -21,5 +21,6 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: GBAmore.gba
+          draft: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
