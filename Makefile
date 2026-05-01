@@ -54,7 +54,10 @@ LIBS := -ltonc
 # list of directories containing libraries, this must be the top level containing
 # include and lib
 #---------------------------------------------------------------------------------
-LIBDIRS	:=	$(LIBGBA) $(DEVKITPRO)/libtonc
+LIBDIRS	:=	$(LIBGBA)
+ifdef DEVKITPRO
+LIBDIRS	+=	$(DEVKITPRO)/libtonc
+endif
 
 #---------------------------------------------------------------------------------
 # no real need to edit anything past this point unless you need to add additional
