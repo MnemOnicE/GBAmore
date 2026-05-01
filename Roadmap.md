@@ -47,24 +47,17 @@
 *   **Collision Detection:** 
     *   Establish an AABB (Axis-Aligned Bounding Box) collision system to handle interactions between the player, environmental solid tiles, and other entities.
 
-##Phase 9: The Event & Dialogue Engine
-Objective: Create a dynamic, data-driven system for handling NPC interactions, cutscenes, and state transitions without hardcoding logic into the main update loop.
+## Phase 9: The Event & Dialogue Engine
+**Objective:** Create a dynamic, data-driven system for handling NPC interactions, cutscenes, and state transitions without hardcoding logic into the main update loop.
 
-Data Architecture:
-
-Design a DialogueNode struct to hold text strings, text-crawl speeds, and pointers to the next node in the conversation tree.
-
-Establish an EventTrigger struct that pairs a specific map coordinate (AABB bounding box) with a callback function or state change.
-
-Logic Integration:
-
-Hook into the collision detection from Phase 8. When the player presses 'A' within an EventTrigger bounding box, pause the main entity update loop and hand control over to the Dialogue/Event manager.
-
-UI Implementation:
-
-Expand upon our Phase 1 TTE (Tonc Text Engine) foundation to render a standardized dialogue box at the bottom of the screen.
-
-Implement a typewriter text-crawl effect and a blinking cursor to indicate when the player needs to press 'A' to advance the text.
+*	**Data Architecture:**
+	*	Design a DialogueNode struct to hold text strings, text-crawl speeds, and pointers to the next node in the conversation tree.
+	*	Establish an EventTrigger struct that pairs a specific map coordinate (AABB bounding box) with a callback function or state change.
+*	**Logic Integration:**
+	*	Hook into the collision detection from Phase 8. When the player presses 'A' within an EventTrigger bounding box, pause the main entity update loop and hand control over to the Dialogue/Event manager.
+*	**UI Implementation:**
+	*	Expand upon our Phase 1 TTE (Tonc Text Engine) foundation to render a standardized dialogue box at the bottom of the screen.
+	*	Implement a typewriter text-crawl effect and a blinking cursor to indicate when the player needs to press 'A' to advance the text.
 
 ## Phase 10: Content, Minigames & Polish
 **Objective:** Branch the core engine out into specialized, divergent gameplay states that utilize custom rendering and input logic.
