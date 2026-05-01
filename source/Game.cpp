@@ -1,5 +1,6 @@
 #include "Game.h"
 #include <tonc.h>
+#include <string.h>
 
 /**
  * @brief Constructs a Game and initializes its state pointer.
@@ -78,7 +79,11 @@ void Game::draw() {
 void Game::load() {
     SaveBlock tempSave;
     // Read from SRAM physical address
-    sram_read(&tempSave, (const void*)0x0E000000, sizeof(SaveBlock));
+    u8* src = (u8*)0x0E000000;
+    u8* dst = (u8*)&tempSave;
+    for (u32 i = 0; i < sizeof(SaveBlock); ++i) {
+        dst[i] = src[i];
+    }
 
     // 0x4742414D is "GBAM" in hex
     if (tempSave.magicSignature == 0x4742414D) {
@@ -93,5 +98,9 @@ void Game::save() {
     newSave.profile = this->profile;
 
     // Write to SRAM physical address
-    sram_write((void*)0x0E000000, &newSave, sizeof(SaveBlock));
+    u8* dst = (u8*)0x0E000000;
+    u8* src = (u8*)&newSave;
+    for (u32 i = 0; i < sizeof(SaveBlock); ++i) {
+        dst[i] = src[i];
+    }
 }
