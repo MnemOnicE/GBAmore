@@ -30,12 +30,7 @@
  */
  
 /**
- * Main menu game state that implements the menu lifecycle: initialization,
- * per-frame update, rendering, and cleanup.
- *
- * Represents the game's main menu and holds a pointer to the Game context
- * used by its lifecycle methods. A single shared instance is exposed via
- * the public static member `State_Menu::instance`.
+ * Tear down the menu state and release or reset any resources acquired during init or runtime.
  */
 class State_Menu : public GameState {
 public:

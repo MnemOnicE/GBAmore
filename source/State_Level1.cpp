@@ -6,33 +6,12 @@
 #include <tonc.h>
 State_Level1 State_Level1::instance;
 
-/**
- * @brief Constructs the Level 1 state and initializes internal members.
- *
- * Initializes the game context pointer to nullptr and sets the cutscene flag to false.
- */
 State_Level1::State_Level1() : game(nullptr), inCutscene(false) {
 }
 
-/**
- * @brief Destructor for the Level 1 state singleton.
- *
- * Performs no special cleanup; the state's resources are managed elsewhere.
- */
 State_Level1::~State_Level1() {
 }
 
-/**
- * @brief Initialize the Level 1 state and prepare its visual and input state.
- *
- * Stores the provided game context, resets cutscene state, clears and sets up UI
- * text (level title and Agate marker), initializes the shadow OAM buffer,
- * uploads the player sprite tiles and palette to object VRAM, configures the
- * player sprite attributes and initial position, and enables object rendering
- * with 1D mapping.
- *
- * @param gameContext Pointer to the current Game context to be stored for state transitions and profile updates.
- */
 void State_Level1::init(Game* gameContext) {
     this->game = gameContext;
     inCutscene = false;
@@ -74,15 +53,6 @@ void State_Level1::init(Game* gameContext) {
 
 }
 
-/**
- * @brief Updates level logic for player input, movement, and Agate interaction.
- *
- * When a cutscene is active, pressing A transitions immediately to the Nest state.
- * Otherwise, reads directional input to move the player, clamps the player position to the visible screen,
- * and writes the sprite position to the shadow OAM buffer. If the player is within the Agate region
- * and presses A, enters the level's cutscene: increments the saved Agate count, clears the UI and displays
- * the found-Agate message with a prompt to return to the Nest, and disables object rendering.
- */
 void State_Level1::update() {
     if (inCutscene) {
         if (key_hit(KEY_A)) {
@@ -125,26 +95,15 @@ void State_Level1::update() {
     }
 }
 
-/**
- * @brief Updates hardware OAM for the level's visible sprite each frame.
- *
- * Copies the first entry from the shadow OAM buffer to the hardware OAM when not in a cutscene; during cutscenes the hardware OAM is left unchanged so disabled sprites remain disabled.
- */
 void State_Level1::draw() {
     // Nothing to do for now, handled by TTE printing directly
 
     if (!inCutscene) {
         // Copy the shadowed OAM buffer to hardware OAM memory
-        oam_copy(oam_mem, obj_buffer, 128);
+        oam_copy(oam_mem, obj_buffer, 1);
     }
 }
 
-/**
- * @brief Tears down level 1 state and removes on-screen sprites.
- *
- * Clears the UI, resets the shadow OAM buffer and copies it to hardware to remove any active sprites,
- * and disables object rendering modes.
- */
 void State_Level1::teardown() {
 
     UI::clear();

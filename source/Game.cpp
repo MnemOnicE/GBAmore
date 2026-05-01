@@ -1,11 +1,9 @@
 #include "Game.h"
 
 /**
- * @brief Construct a Game and initialize its runtime state.
+ * @brief Constructs a Game and initializes its state pointer.
  *
- * Initializes the Game with no active state and a default player profile:
- * `currentState` is set to `nullptr`, `profile.agatesCollected` is set to 0,
- * and `profile.canDash` is set to false.
+ * Initializes the Game instance with no active state (sets `currentState` to `nullptr`).
  */
 Game::Game() : currentState(nullptr) {
     profile.agatesCollected = 0;
@@ -13,10 +11,9 @@ Game::Game() : currentState(nullptr) {
 }
 
 /**
- * @brief Destroys the Game and runs teardown on the active game state.
+ * @brief Cleans up the current game state and frees associated resources.
  *
- * If an active `currentState` exists, its `teardown()` method is invoked to allow the state to release resources.
- * The destructor does not delete or take ownership of `currentState`.
+ * If a current state exists, calls its teardown routine and deletes it.
  */
 Game::~Game() {
     if (currentState) {
@@ -26,11 +23,12 @@ Game::~Game() {
 }
 
 /**
- * @brief Replace the game's current state and initialize the new state.
+ * @brief Replace the game's current state with a new state and initialize it.
  *
- * If a current state exists, its teardown() is called before replacing it; this function does not delete the previous state. After assignment, if `newState` is non-null its init(this) is invoked. Passing `nullptr` clears the current state.
+ * If a current state exists, it is torn down and deleted before assignment.
+ * After assigning `newState`, the state's `init(this)` is called when `newState` is non-null.
  *
- * @param newState Pointer to the new GameState to become active. Ownership is not taken by Game; callers are responsible for managing the state's lifetime.
+ * @param newState Pointer to the new GameState to become the active state. Ownership is transferred to the Game; the Game will call `teardown()` and delete the previous state if present. Passing `nullptr` clears the current state.
  */
 void Game::changeState(GameState* newState) {
     if (currentState) {

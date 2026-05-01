@@ -29,10 +29,7 @@
  */
 
 /**
- * Clean up level-specific resources and prepare the state for shutdown or transition.
- *
- * Reset internal members and release or detach any resources owned by this state
- * so the instance can be safely reinitialized or destroyed.
+ * Perform cleanup and prepare the state for shutdown or transition.
  */
 class State_Level1 : public GameState {
 public:

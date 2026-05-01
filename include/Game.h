@@ -41,34 +41,6 @@ struct PlayerProfile {
     bool canDash;
 };
 
-/**
- * Core game object that owns runtime state and drives the main loop.
- */
- 
-/**
- * Construct a Game and initialize its internal state.
- */
- 
-/**
- * Destroy the Game and release any owned resources.
- */
- 
-/**
- * Set the active game state.
- * @param newState Pointer to the GameState to become active; may be `nullptr` to clear the active state.
- */
- 
-/**
- * Advance the active game state's logic by one update step.
- */
- 
-/**
- * Render the active game state.
- */
- 
-/**
- * Runtime player state stored on the Game instance (tracks collected agates and dash capability).
- */
 class Game {
 public:
     Game();
