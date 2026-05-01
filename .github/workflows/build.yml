@@ -7,6 +7,18 @@ on:
     branches: [ "main" ]
 
 jobs:
+  cppcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install cppcheck
+        run: sudo apt-get update && sudo apt-get install -y cppcheck
+
+      - name: Run cppcheck
+        run: cppcheck --enable=all --force --inline-suppr source/ include/ || true
+
   build:
     runs-on: ubuntu-latest
     container: devkitpro/devkitarm
@@ -18,9 +30,15 @@ jobs:
     - name: Compile the game
       run: make
 
+    - name: Rename ROM with short hash
+      run: |
+        SHORT_HASH=$(echo "${GITHUB_SHA}" | cut -c1-7)
+        mv GBAmore.gba "GBAmore-${SHORT_HASH}.gba"
+        echo "ROM_NAME=GBAmore-${SHORT_HASH}.gba" >> $GITHUB_ENV
+
     - name: Upload GBA Artifact
       uses: actions/upload-artifact@v4
       with:
         name: GBAmore-ROM
-        path: GBAmore.gba
+        path: ${{ env.ROM_NAME }}
         if-no-files-found: error
