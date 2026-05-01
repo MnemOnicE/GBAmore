@@ -93,7 +93,7 @@ void Game::load() {
 }
 
 void Game::save() {
-    SaveBlock newSave;
+    sram_write(SRAM, &newSave, sizeof(SaveBlock));
     newSave.magicSignature = 0x4742414D;
     newSave.profile = this->profile;
 
