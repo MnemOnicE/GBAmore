@@ -2,7 +2,7 @@
 
 ## Phase 1-3: The Engine Foundation (Completed)
 **Goal:** Establish the underlying architecture and rendering pipeline.
-*   **Milestones:** CI/CD pipeline establishment, standard devkitARM Makefile, core Finite State Machine (FSM), and the Object Attribute Memory (OAM) pipeline for the Chipmunk sprite.
+*   **Milestones:** CI/CD pipeline establishment, standard devkitARM Makefile, core Finite State Machine (FSM), Tonc Text Engine (TTE) integration, and the Object Attribute Memory (OAM) pipeline for the Chipmunk sprite.
 *   **Status:** Testing/Verification pending.
 
 ## Phase 4: The Skeleton Loop (In Progress)
