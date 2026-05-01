@@ -1,5 +1,6 @@
 #include "State_Level1.h"
 #include "State_Nest.h"
+#include "State_Map.h"
 #include "Game.h"
 #include "UI.h"
 #include "chipmunk.h"
@@ -58,6 +59,11 @@ void State_Level1::update() {
         if (key_hit(KEY_A)) {
             game->changeState(&State_Nest::instance);
         }
+        return;
+    }
+
+    if (key_hit(KEY_SELECT)) {
+        game->changeState(&State_Map::instance);
         return;
     }
 

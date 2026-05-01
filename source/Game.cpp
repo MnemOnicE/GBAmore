@@ -8,6 +8,14 @@
 Game::Game() : currentState(nullptr) {
     profile.agatesCollected = 0;
     profile.canDash = false;
+    profile.currentRoomX = 0;
+    profile.currentRoomY = 0;
+    for (int y = 0; y < 8; ++y) {
+        for (int x = 0; x < 8; ++x) {
+            profile.exploredRooms[y][x] = false;
+        }
+    }
+    profile.exploredRooms[0][0] = true;
 }
 
 /**

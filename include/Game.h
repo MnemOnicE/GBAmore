@@ -39,6 +39,9 @@
 struct PlayerProfile {
     int agatesCollected;
     bool canDash;
+    bool exploredRooms[8][8];
+    int currentRoomX;
+    int currentRoomY;
 };
 
 class Game {
