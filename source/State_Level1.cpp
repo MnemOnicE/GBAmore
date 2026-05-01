@@ -7,6 +7,8 @@
 #include "UI.h"
 #include "chipmunk.h"
 #include <tonc.h>
+#include <maxmod.h>
+#include "soundbank.h"
 State_Level1 State_Level1::instance;
 
 State_Level1::State_Level1() : game(nullptr), inCutscene(false) {
@@ -119,6 +121,7 @@ void State_Level1::update() {
     // Check win condition
     if (player_x >= 112 && player_x < 128 && player_y >= 16 && player_y < 32) {
         if (key_hit(KEY_A)) {
+            mmEffect(SFX_LEVELUP);
             inCutscene = true;
             game->profile.agatesCollected++;
             UI::clear();

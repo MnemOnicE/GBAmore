@@ -26,7 +26,7 @@ SOURCES		:= source
 INCLUDES	:= include
 DATA		:=
 GRAPHICS	:= graphics
-MUSIC		:=
+MUSIC		:= audio
 
 #---------------------------------------------------------------------------------
 # options for code generation
@@ -47,14 +47,14 @@ LDFLAGS := -specs=gba.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map)
 #---------------------------------------------------------------------------------
 # any extra libraries we wish to link with the project
 #---------------------------------------------------------------------------------
-LIBS := -ltonc
+LIBS := -ltonc -lmm
 
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing
 # include and lib
 #---------------------------------------------------------------------------------
-LIBDIRS	:=	$(LIBGBA) $(DEVKITPRO)/libtonc
+LIBDIRS	:=	$(LIBGBA) $(DEVKITPRO)/libtonc $(DEVKITPRO)/libmaxmod
 
 #---------------------------------------------------------------------------------
 # no real need to edit anything past this point unless you need to add additional

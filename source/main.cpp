@@ -2,6 +2,9 @@
 #include "Game.h"
 #include "State_Menu.h"
 #include "UI.h"
+#include <maxmod.h>
+#include "soundbank.h"
+#include "soundbank_bin.h"
 
 /**
  * @brief Program entry point that initializes the UI and runs the game's main loop.
@@ -15,7 +18,11 @@
 int main()
 {
     irq_init(NULL);
-    irq_add(II_VBLANK, NULL);
+    irq_add(II_VBLANK, mmVBlank);
+    irq_enable(II_VBLANK);
+
+    // Initialize Maxmod with 8 channels
+    mmInitDefault((mm_addr)soundbank_bin, 8);
 
     // Initialize standard Tonc settings and TTE
     UI::init();
@@ -32,6 +39,7 @@ int main()
 
         game.update();
         game.draw();
+        mmFrame();
     }
 
     return 0;
