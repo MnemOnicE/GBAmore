@@ -15,8 +15,8 @@ Game::Game() : currentState(nullptr) {
     profile.canDash = false;
     profile.currentRoomX = 0;
     profile.currentRoomY = 0;
-    for (int y = 0; y < 8; ++y) {
-        for (int x = 0; x < 8; ++x) {
+    for (int y = 0; y < PlayerProfile::MAP_HEIGHT; ++y) {
+        for (int x = 0; x < PlayerProfile::MAP_WIDTH; ++x) {
             profile.exploredRooms[y][x] = false;
         }
     }
