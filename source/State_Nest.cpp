@@ -138,6 +138,6 @@ void State_Nest::draw() {
 void State_Nest::teardown() {
     UI::clear();
     oam_init(obj_buffer, 128);
-    oam_copy(oam_mem, obj_buffer, 1);
+oam_copy(oam_mem, obj_buffer, 128);
     REG_DISPCNT &= ~(DCNT_OBJ | DCNT_OBJ_1D);
 }
