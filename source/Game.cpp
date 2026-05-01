@@ -1,22 +1,17 @@
 #include "Game.h"
 
 /**
- * @brief Construct a Game and initialize its runtime profile and active state.
+ * @brief Constructs a Game and initializes its state pointer.
  *
- * Initializes the Game with no active state and a cleared player profile:
- * - `currentState` is set to `nullptr`.
- * - `profile.agatesCollected` is set to 0.
- * - `profile.canDash` is set to false.
- * - `profile.currentRoomX` and `profile.currentRoomY` are set to 0.
- * - All entries of the 8×8 `profile.exploredRooms` grid are set to `false`, then `profile.exploredRooms[0][0]` is set to `true`.
+ * Initializes the Game instance with no active state (sets `currentState` to `nullptr`).
  */
 Game::Game() : currentState(nullptr) {
     profile.agatesCollected = 0;
     profile.canDash = false;
     profile.currentRoomX = 0;
     profile.currentRoomY = 0;
-    for (int y = 0; y < PlayerProfile::MAP_HEIGHT; ++y) {
-        for (int x = 0; x < PlayerProfile::MAP_WIDTH; ++x) {
+    for (int y = 0; y < 8; ++y) {
+        for (int x = 0; x < 8; ++x) {
             profile.exploredRooms[y][x] = false;
         }
     }

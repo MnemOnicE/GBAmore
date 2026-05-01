@@ -54,17 +54,6 @@ void State_Level1::init(Game* gameContext) {
 
 }
 
-/**
- * @brief Process input, move the player sprite, and perform state transitions including the win cutscene.
- *
- * Updates player position from directional input (with 2-pixel steps), clamps it to the screen bounds,
- * and writes the position to the sprite OAM buffer. While the level's cutscene flag is set, pressing A
- * transitions to the Nest state. When not in a cutscene, pressing Select transitions to the Map state.
- * If the player is within the agate trigger area and presses A, the function enters the cutscene: it
- * increments the player's agates collected in the game profile, clears and prints the agate-found UI,
- * disables object rendering, and sets the cutscene flag.
- *
- */
 void State_Level1::update() {
     if (inCutscene) {
         if (key_hit(KEY_A)) {

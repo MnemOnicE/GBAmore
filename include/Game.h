@@ -39,33 +39,11 @@
 struct PlayerProfile {
     int agatesCollected;
     bool canDash;
-    static constexpr int MAP_WIDTH = 8;
-    static constexpr int MAP_HEIGHT = 8;
-    bool exploredRooms[MAP_HEIGHT][MAP_WIDTH];
+    bool exploredRooms[8][8];
     int currentRoomX;
     int currentRoomY;
 };
 
-/**
- * Construct a Game instance and initialize its internal state.
- */
-
-/**
- * Destroy the Game instance and release its active state resources.
- */
-
-/**
- * Replace the currently active game state with `newState`.
- * @param newState Pointer to the GameState that will become the active state.
- */
-
-/**
- * Advance game logic by one step for the active state.
- */
-
-/**
- * Render the active state to the current output/screen.
- */
 class Game {
 public:
     Game();
