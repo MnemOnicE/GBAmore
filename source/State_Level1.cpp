@@ -85,12 +85,25 @@ void State_Level1::update() {
 
     // Clamp coordinates to screen boundaries
     if (player_x < 0) player_x = 0;
-    if (player_x > 240 - 16) player_x = 240 - 16;
+    if (player_x > 256 - 16) player_x = 256 - 16;
     if (player_y < 0) player_y = 0;
-    if (player_y > 160 - 16) player_y = 160 - 16;
+    if (player_y > 256 - 16) player_y = 256 - 16;
 
-    // Update position in OAM buffer
-    obj_set_pos(&obj_buffer[0], player_x, player_y);
+    int camera_x = player_x - (240 / 2) + (16 / 2); // Center X
+    int camera_y = player_y - (160 / 2) + (16 / 2); // Center Y
+
+    // Clamp camera to the 256x256 map bounds
+    if (camera_x < 0) camera_x = 0;
+    if (camera_x > 256 - 240) camera_x = 256 - 240;
+    if (camera_y < 0) camera_y = 0;
+    if (camera_y > 256 - 160) camera_y = 256 - 160;
+
+    // Scroll the background
+    REG_BG1HOFS = camera_x;
+    REG_BG1VOFS = camera_y;
+
+    // Draw sprite relative to the camera
+    obj_set_pos(&obj_buffer[0], player_x - camera_x, player_y - camera_y);
 
     // Check win condition
     if (player_x >= 112 && player_x < 128 && player_y >= 16 && player_y < 32) {
@@ -116,6 +129,10 @@ void State_Level1::draw() {
 }
 
 void State_Level1::teardown() {
+    // Reset background scroll to prevent bleeding into other states
+    REG_BG1HOFS = 0;
+    REG_BG1VOFS = 0;
+
 
     UI::clear();
 
