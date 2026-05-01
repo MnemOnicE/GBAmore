@@ -78,6 +78,8 @@ CFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.c)))
 CPPFILES	:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.cpp)))
 SFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.s)))
 BINFILES	:=	$(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.*)))
+BMPFILES	:=	$(foreach dir,$(GRAPHICS),$(notdir $(wildcard $(dir)/*.bmp)))
+PNGFILES	:=	$(foreach dir,$(GRAPHICS),$(notdir $(wildcard $(dir)/*.png)))
 
 ifneq ($(strip $(MUSIC)),)
 	export AUDIOFILES	:=	$(foreach dir,$(notdir $(wildcard $(MUSIC)/*.*)),$(CURDIR)/$(MUSIC)/$(dir))
@@ -107,9 +109,10 @@ export OFILES_BIN := $(addsuffix .o,$(BINFILES))
 
 export OFILES_SOURCES := $(CPPFILES:.cpp=.o) $(CFILES:.c=.o) $(SFILES:.s=.o)
 
-export OFILES := $(OFILES_BIN) $(OFILES_SOURCES) chipmunk.o
+export OFILES_GRAPHICS := $(BMPFILES:.bmp=.o) $(PNGFILES:.png=.o)
+export OFILES := $(OFILES_BIN) $(OFILES_SOURCES) $(OFILES_GRAPHICS)
 
-export HFILES := $(addsuffix .h,$(subst .,_,$(BINFILES))) chipmunk.h
+export HFILES := $(addsuffix .h,$(subst .,_,$(BINFILES))) $(BMPFILES:.bmp=.h) $(PNGFILES:.png=.h)
 export INCLUDE	:=	$(foreach dir,$(INCLUDES),-iquote $(CURDIR)/$(dir)) \
 					$(foreach dir,$(LIBDIRS),-I$(dir)/include) \
 					-I$(CURDIR)/$(BUILD)
@@ -165,14 +168,6 @@ soundbank.bin soundbank.h : $(AUDIOFILES)
 	@$(bin2o)
 
 
-#---------------------------------------------------------------------------------
-# custom rules for processing graphics
-#---------------------------------------------------------------------------------
-%.s %.h : %.bmp %.grit
-	grit $< -fts -o$*
-
-%.s %.h : %.png %.grit
-	grit $< -fts -o$*
 
 
 #---------------------------------------------------------------------------------

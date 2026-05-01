@@ -1,23 +1,5 @@
 #include "Background.h"
 
-/**
- * @brief Loads background graphics and configuration into hardware memory and enables the specified background.
- *
- * Copies tile data into the character block `cbb`, map data into the screen block `sbb`, and palette data
- * into background palette memory. Builds and writes the background control word for the selected background
- * index with the chosen pixel format, and sets the corresponding display control bit to enable that background.
- *
- * @param tiles Pointer to source tile (graphics) data.
- * @param tileLen Length in bytes of the tile data.
- * @param map Pointer to source map (screen entry) data.
- * @param mapLen Length in bytes of the map data.
- * @param pal Pointer to source palette data.
- * @param palLen Length in bytes of the palette data.
- * @param cbb Character base block index where tiles will be copied.
- * @param sbb Screen base block index where map data will be copied.
- * @param bg_index Background index (0–3) whose control register will be configured and enabled.
- * @param is8bpp If true, configures the background for 8bpp tiles; otherwise configures for 4bpp.
- */
 void Background::load(const void* tiles, unsigned int tileLen,
                       const void* map, unsigned int mapLen,
                       const void* pal, unsigned int palLen,
