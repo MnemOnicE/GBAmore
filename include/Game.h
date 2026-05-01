@@ -39,7 +39,9 @@
 struct PlayerProfile {
     int agatesCollected;
     bool canDash;
-    bool exploredRooms[8][8];
+    static constexpr int MAP_WIDTH = 8;
+    static constexpr int MAP_HEIGHT = 8;
+    bool exploredRooms[MAP_HEIGHT][MAP_WIDTH];
     int currentRoomX;
     int currentRoomY;
 };
