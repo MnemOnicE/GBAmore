@@ -44,6 +44,26 @@ struct PlayerProfile {
     int currentRoomY;
 };
 
+/**
+ * Construct a Game instance and initialize its internal state.
+ */
+
+/**
+ * Destroy the Game instance and release its active state resources.
+ */
+
+/**
+ * Replace the currently active game state with `newState`.
+ * @param newState Pointer to the GameState that will become the active state.
+ */
+
+/**
+ * Advance game logic by one step for the active state.
+ */
+
+/**
+ * Render the active state to the current output/screen.
+ */
 class Game {
 public:
     Game();
