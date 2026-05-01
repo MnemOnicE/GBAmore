@@ -43,6 +43,9 @@ public:
 
 private:
     Game* game;
+    OBJ_ATTR obj_buffer[128];
+    int player_x;
+    int player_y;
 };
 
 #endif // STATE_LEVEL1_H
