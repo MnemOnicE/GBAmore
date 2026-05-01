@@ -18,11 +18,11 @@
 int main()
 {
     irq_init(NULL);
-    irq_add(II_VBLANK, mmVBlank);
-    irq_enable(II_VBLANK);
-
     // Initialize Maxmod with 8 channels
     mmInitDefault((mm_addr)soundbank_bin, 8);
+
+    irq_add(II_VBLANK, mmVBlank);
+    irq_enable(II_VBLANK);
 
     // Initialize standard Tonc settings and TTE
     UI::init();
