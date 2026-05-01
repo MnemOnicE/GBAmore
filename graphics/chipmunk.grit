@@ -1,0 +1,5 @@
+# 4bpp, object, transparent magenta
+-gB4
+-gt
+-gTFF00FF
+-O chipmunk
