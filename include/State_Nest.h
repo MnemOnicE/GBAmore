@@ -2,6 +2,7 @@
 #define STATE_NEST_H
 
 #include "GameState.h"
+#include <tonc.h>
 
 class State_Nest : public GameState {
 public:
@@ -17,10 +18,10 @@ public:
 
 private:
     Game* game;
-    int selectedOption;
-    bool viewingCollection;
-
-    void drawMenu();
+    OBJ_ATTR obj_buffer[128];
+    int player_x;
+    int player_y;
+    bool interacting;
 };
 
 #endif // STATE_NEST_H
