@@ -36,6 +36,11 @@
 /**
  * Pointer to the currently active GameState.
  */
+struct PlayerProfile {
+    int agatesCollected;
+    bool canDash;
+};
+
 class Game {
 public:
     Game();
@@ -46,6 +51,7 @@ public:
     void update();
     void draw();
 
+    PlayerProfile profile;
 private:
     GameState* currentState;
 };

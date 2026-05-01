@@ -1,8 +1,10 @@
+#include "State_Nest.h"
 #include "State_Menu.h"
 #include "State_Level1.h"
 #include "Game.h"
 #include "UI.h"
 #include <tonc.h>
+State_Menu State_Menu::instance;
 
 /**
  * @brief Construct a new State_Menu instance.
@@ -32,6 +34,9 @@ State_Menu::~State_Menu() {
 void State_Menu::init(Game* gameContext) {
     this->game = gameContext;
 
+    // Disable objects completely, as this is a pure text menu
+    REG_DISPCNT &= ~(DCNT_OBJ | DCNT_OBJ_1D);
+
     // Clear screen
     UI::clear();
 
@@ -47,7 +52,7 @@ void State_Menu::init(Game* gameContext) {
  */
 void State_Menu::update() {
     if (key_hit(KEY_START)) {
-        game->changeState(new State_Level1());
+        game->changeState(&State_Nest::instance);
     }
 }
 
