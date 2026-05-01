@@ -59,6 +59,17 @@ void State_Level1::init(Game* gameContext) {
 
 }
 
+/**
+ * @brief Process input, move the player, update camera/scroll, and handle state transitions.
+ *
+ * Updates player position from directional input and clamps it to a 256×256 map for a 16×16 sprite.
+ * Centers and clamps a 240×160 viewport on the player, writes the viewport to BG1 scroll registers,
+ * and places the player sprite at screen-relative coordinates. Handles global state transitions:
+ * - Pressing Select switches to the map state.
+ * - When in a cutscene, pressing A returns to the nest state.
+ * If the player is inside the Agate pickup region and presses A, enters a cutscene, increments
+ * the game's agatesCollected counter, clears the UI and disables object rendering.
+ */
 void State_Level1::update() {
     if (inCutscene) {
         if (key_hit(KEY_A)) {
@@ -119,6 +130,12 @@ void State_Level1::update() {
     }
 }
 
+/**
+ * @brief Updates hardware OAM from the shadow OAM when gameplay is active.
+ *
+ * Copies the first sprite entry from the shadow OAM buffer into hardware OAM
+ * unless the state is in a cutscene, in which case no sprite data is written.
+ */
 void State_Level1::draw() {
     // Nothing to do for now, handled by TTE printing directly
 
@@ -128,6 +145,12 @@ void State_Level1::draw() {
     }
 }
 
+/**
+ * @brief Clean up and reset rendering state when leaving Level 1.
+ *
+ * Resets background scroll offsets, clears the UI and object attribute memory (removing the player sprite),
+ * disables sprite rendering and 1D object mapping, and disables background 1 so no visual state bleeds into the next state.
+ */
 void State_Level1::teardown() {
     // Reset background scroll to prevent bleeding into other states
     REG_BG1HOFS = 0;
