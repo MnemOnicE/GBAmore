@@ -102,8 +102,8 @@ void State_Level1::update() {
     if (entities[0].y < 0) entities[0].y = 0;
     if (entities[0].y > 256 - 16) entities[0].y = 256 - 16;
 
-    int camera_x = entities[0].x - (240 / 2) + (16 / 2); // Center X
-    int camera_y = entities[0].y - (160 / 2) + (16 / 2); // Center Y
+    camera_x = entities[0].x - (240 / 2) + (16 / 2); // Center X
+    camera_y = entities[0].y - (160 / 2) + (16 / 2); // Center Y
 
     // Clamp camera to the 256x256 map bounds
     if (camera_x < 0) camera_x = 0;
