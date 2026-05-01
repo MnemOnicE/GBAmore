@@ -39,19 +39,42 @@
 struct PlayerProfile {
     int agatesCollected;
     bool canDash;
-    bool exploredRooms[8][8];
+    static constexpr int MAP_WIDTH = 8;
+    static constexpr int MAP_HEIGHT = 8;
+    bool exploredRooms[MAP_HEIGHT][MAP_WIDTH];
     int currentRoomX;
     int currentRoomY;
 };
 
+/**
+ * Main game engine class that holds player state and coordinates game states.
+ */
 class Game {
 public:
+    /**
+     * Construct a Game instance and initialize its internal state.
+     */
     Game();
+
+    /**
+     * Destroy the Game instance and release its active state resources.
+     */
     ~Game();
 
+    /**
+     * Replace the currently active game state with `newState`.
+     * @param newState Pointer to the GameState that will become the active state.
+     */
     void changeState(GameState* newState);
 
+    /**
+     * Advance game logic by one step for the active state.
+     */
     void update();
+
+    /**
+     * Render the active state to the current output/screen.
+     */
     void draw();
 
     PlayerProfile profile;
