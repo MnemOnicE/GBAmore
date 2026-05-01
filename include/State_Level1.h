@@ -2,6 +2,7 @@
 #define STATE_LEVEL1_H
 
 #include "GameState.h"
+#include <tonc.h>
 
 /**
  * Represents the first gameplay state (Level 1) and manages its lifecycle.
