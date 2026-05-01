@@ -135,7 +135,7 @@ void State_Level1::draw() {
 
     if (!inCutscene) {
         // Copy the shadowed OAM buffer to hardware OAM memory
-        oam_copy(oam_mem, obj_buffer, 1);
+        oam_copy(oam_mem, obj_buffer, 128);
     }
 }
 
