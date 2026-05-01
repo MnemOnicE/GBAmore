@@ -82,7 +82,7 @@ void State_Level1::update() {
     obj_set_pos(&obj_buffer[0], player_x, player_y);
 
     // Check win condition
-    if (player_x >= 112 && player_x <= 128 && player_y >= 16 && player_y <= 32) {
+    if (player_x >= 112 && player_x < 128 && player_y >= 16 && player_y < 32) {
         if (key_hit(KEY_A)) {
             inCutscene = true;
             game->profile.agatesCollected++;

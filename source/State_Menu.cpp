@@ -34,6 +34,9 @@ State_Menu::~State_Menu() {
 void State_Menu::init(Game* gameContext) {
     this->game = gameContext;
 
+    // Disable objects completely, as this is a pure text menu
+    REG_DISPCNT &= ~(DCNT_OBJ | DCNT_OBJ_1D);
+
     // Clear screen
     UI::clear();
 
