@@ -33,7 +33,7 @@ Game::~Game() {
 void Game::changeState(GameState* newState) {
     if (currentState) {
         currentState->teardown();
-         // Assuming the game owns the state memory and states are dynamically allocated. For now, we assume simple pointer transfer
+        // Transition to the new state. Static instances are used to avoid dynamic allocation.
     }
 
     currentState = newState;
