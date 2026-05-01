@@ -46,7 +46,6 @@ struct PlayerProfile {
 };
 
 struct SaveBlock {
-    static constexpr int MAGIC_SIGNATURE = 0x4742414D; // "GBAM"
     int magicSignature;
     PlayerProfile profile;
 };

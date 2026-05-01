@@ -78,8 +78,8 @@ void Game::draw() {
 
 void Game::load() {
     SaveBlock tempSave;
-    sram_read(&tempSave, SRAM, sizeof(SaveBlock));
-    u8* src = (u8*)0x0E000000;
+    // Read from SRAM physical address
+    u8* src = (u8*)sram_mem;
     u8* dst = (u8*)&tempSave;
     for (u32 i = 0; i < sizeof(SaveBlock); ++i) {
         dst[i] = src[i];
@@ -93,12 +93,12 @@ void Game::load() {
 }
 
 void Game::save() {
-    sram_write(SRAM, &newSave, sizeof(SaveBlock));
+    SaveBlock newSave;
     newSave.magicSignature = 0x4742414D;
     newSave.profile = this->profile;
 
     // Write to SRAM physical address
-    u8* dst = (u8*)0x0E000000;
+    u8* dst = (u8*)sram_mem;
     u8* src = (u8*)&newSave;
     for (u32 i = 0; i < sizeof(SaveBlock); ++i) {
         dst[i] = src[i];
