@@ -54,8 +54,8 @@ void State_Level1::init(Game* gameContext) {
     // Enable Objects (sprites) and 1D object mapping
     REG_DISPCNT |= DCNT_OBJ | DCNT_OBJ_1D;
 
-    // Load background via Background wrapper (BG1, CBB 1, SBB 29, 8bpp)
-    Background::load(bg_level1Tiles, bg_level1TilesLen, bg_level1Map, bg_level1MapLen, bg_level1Pal, bg_level1PalLen, 1, 29, 1, true);
+    // Load background via Background wrapper (BG1, CBB 1, SBB 29, 4bpp)
+    Background::load(bg_level1Tiles, bg_level1TilesLen, bg_level1Map, bg_level1MapLen, bg_level1Pal, bg_level1PalLen, 1, 29, 1, false);
 
 }
 

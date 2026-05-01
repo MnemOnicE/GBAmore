@@ -1,5 +1,5 @@
-# 8bpp, background, tilemap
--gB8
+# 4bpp, background, tilemap
+-gB4
 -m
 -mR8
 -p
