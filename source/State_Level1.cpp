@@ -106,7 +106,7 @@ void State_Level1::update() {
  * visual output are handled elsewhere.
  */
 void State_Level1::draw() {
-    // Nothing to do for now, handled by TTE printing directly
+    oam_copy(oam_mem, obj_buffer, 128);
 
     // Copy the shadowed OAM buffer to hardware OAM memory
     oam_copy(oam_mem, obj_buffer, 1);
