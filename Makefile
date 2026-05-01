@@ -107,9 +107,9 @@ export OFILES_BIN := $(addsuffix .o,$(BINFILES))
 
 export OFILES_SOURCES := $(CPPFILES:.cpp=.o) $(CFILES:.c=.o) $(SFILES:.s=.o)
 
-export OFILES := $(OFILES_BIN) $(OFILES_SOURCES) chipmunk.o bg_level1.o
+export OFILES := $(OFILES_BIN) $(OFILES_SOURCES) chipmunk.o bg_level1.o shadow.o
 
-export HFILES := $(addsuffix .h,$(subst .,_,$(BINFILES))) chipmunk.h bg_level1.h
+export HFILES := $(addsuffix .h,$(subst .,_,$(BINFILES))) chipmunk.h bg_level1.h shadow.h
 export INCLUDE	:=	$(foreach dir,$(INCLUDES),-iquote $(CURDIR)/$(dir)) \
 					$(foreach dir,$(LIBDIRS),-I$(dir)/include) \
 					-I$(CURDIR)/$(BUILD)
