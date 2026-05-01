@@ -57,6 +57,7 @@ private:
     OBJ_ATTR obj_buffer[128];
     Entity entities[16];
     int num_entities;
+    int camera_x, camera_y;
     bool inCutscene;
 
     bool checkCollision(Entity& a, Entity& b);
