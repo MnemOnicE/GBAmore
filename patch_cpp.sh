@@ -1,3 +1,5 @@
+#!/bin/bash
+cat << 'PATCH' > source/State_Level1.cpp
 #include "State_Level1.h"
 #include "Background.h"
 #include "bg_level1.h"
@@ -191,3 +193,4 @@ void State_Level1::teardown() {
     // Disable background 1
     REG_DISPCNT &= ~DCNT_BG1;
 }
+PATCH

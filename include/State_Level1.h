@@ -2,7 +2,6 @@
 #define STATE_LEVEL1_H
 
 #include "GameState.h"
-#include "shadow.h"
 #include <tonc.h>
 
 /**
@@ -41,41 +40,6 @@ struct Entity {
     bool active;
 };
 
-/**
- * State for level 1: manages entities, rendering objects, and cutscenes.
- */
-
-/**
- * Construct a Level 1 state instance and initialize internal defaults.
- */
-
-/**
- * Destroy the Level 1 state and release any owned resources.
- */
-
-/**
- * Initialize the level using the provided game context.
- * @param gameContext Pointer to the active Game context used by this state.
- */
-
-/**
- * Advance the level simulation by one tick/frame.
- */
-
-/**
- * Render the level to the current rendering context.
- */
-
-/**
- * Perform cleanup and prepare the state for shutdown or transition.
- */
-
-/**
- * Check whether two entities' bounding boxes overlap.
- * @param a First entity to test.
- * @param b Second entity to test.
- * @returns `true` if the two entities' axis-aligned bounding boxes intersect, `false` otherwise.
- */
 class State_Level1 : public GameState {
 public:
     static State_Level1 instance;
@@ -93,6 +57,8 @@ private:
     Entity entities[16];
     int num_entities;
     bool inCutscene;
+    int camera_x;
+    int camera_y;
 
     bool checkCollision(Entity& a, Entity& b);
 
