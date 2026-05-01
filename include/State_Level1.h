@@ -29,9 +29,7 @@
  */
 
 /**
- * Perform cleanup of the Level 1 state and prepare for shutdown or transition.
- *
- * Resets internal runtime state and releases or invalidates resources owned by this state.
+ * Perform cleanup and prepare the state for shutdown or transition.
  */
 class State_Level1 : public GameState {
 public:

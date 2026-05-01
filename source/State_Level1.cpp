@@ -67,11 +67,9 @@ void State_Level1::init(Game* gameContext) {
 }
 
 /**
- * @brief Process player input, update the player sprite position, and write it to the shadow OAM.
+ * @brief Executes per-frame update logic for the Level 1 game state.
  *
- * Moves the player by 2 pixels per frame in response to directional keys (up, down, left, right),
- * constrains the 16×16 sprite inside the 240×160 screen bounds, and updates the shadow OAM entry
- * for the player so the hardware OAM can be synced during draw.
+ * Currently no update behavior is implemented.
  */
 void State_Level1::update() {
     // Nothing for now
@@ -99,14 +97,13 @@ void State_Level1::update() {
 }
 
 /**
- * @brief Synchronizes sprite OAM for Level 1 without performing additional drawing.
+ * @brief No-op render step for the Level 1 state.
  *
- * Copies the shadowed object attribute memory (OAM) entry for the player into
- * hardware OAM so the sprite position and attributes are applied; text and other
- * visual output are handled elsewhere.
+ * The level's visual output is produced elsewhere (direct TTE printing), so this
+ * draw hook intentionally performs no rendering.
  */
 void State_Level1::draw() {
-    oam_copy(oam_mem, obj_buffer, 128);
+    // Nothing to do for now, handled by TTE printing directly
 
     // Copy the shadowed OAM buffer to hardware OAM memory
     oam_copy(oam_mem, obj_buffer, 1);
@@ -114,14 +111,13 @@ void State_Level1::draw() {
 }
 
 /**
- * @brief Tear down the level state and remove on-screen UI and sprites.
+ * @brief Tear down the level and clear on-screen UI.
  *
- * Clears any on-screen UI for this state, resets the shadow OAM and commits it
- * to hardware to remove any level sprites, and disables object rendering.
+ * Ensures any UI elements printed for this state are removed from the display.
  */
 void State_Level1::teardown() {
 
-    oam_copy(oam_mem, obj_buffer, 128);
+    UI::clear();
 
     // Clear out OAM and update hardware to remove the sprite
     oam_init(obj_buffer, 128);

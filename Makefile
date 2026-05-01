@@ -101,8 +101,8 @@ endif
 #---------------------------------------------------------------------------------
 # build a list of auto-generated c files
 #---------------------------------------------------------------------------------
-export CFILES	+=	$(addsuffix .c,$(notdir $(wildcard $(foreach dir,$(GRAPHICS),$(dir)/*.png))))
-export CFILES	+=	$(addsuffix .c,$(notdir $(wildcard $(foreach dir,$(GRAPHICS),$(dir)/*.bmp))))
+export CFILES	+=	$(patsubst %.png,%.c,$(notdir $(wildcard $(foreach dir,$(GRAPHICS),$(dir)/*.png))))
+export CFILES	+=	$(patsubst %.bmp,%.c,$(notdir $(wildcard $(foreach dir,$(GRAPHICS),$(dir)/*.bmp))))
 
 export OFILES_BIN := $(addsuffix .o,$(BINFILES))
 
@@ -111,19 +111,8 @@ export OFILES_SOURCES := $(CPPFILES:.cpp=.o) $(CFILES:.c=.o) $(SFILES:.s=.o)
 export OFILES := $(OFILES_BIN) $(OFILES_SOURCES)
 
 export HFILES := $(addsuffix .h,$(subst .,_,$(BINFILES))) \
-                 $(addsuffix .h,$(notdir $(wildcard $(foreach dir,$(GRAPHICS),$(dir)/*.png)))) \
-                 $(addsuffix .h,$(notdir $(wildcard $(foreach dir,$(GRAPHICS),$(dir)/*.bmp))))
-                 $(addsuffix .h,$(notdir $(wildcard $(foreach dir,$(GRAPHICS),$(dir)/*.png)))) \
-                 $(addsuffix .h,$(notdir $(wildcard $(foreach dir,$(GRAPHICS),$(dir)/*.bmp))))
-                 $(addsuffix .h,$(notdir $(wildcard $(foreach dir,$(GRAPHICS),$(dir)/*.png)))) \
-                 $(addsuffix .h,$(notdir $(wildcard $(foreach dir,$(GRAPHICS),$(dir)/*.bmp))))                 $(addsuffix .h,$(notdir $(wildcard $(foreach dir,$(GRAPHICS),$(dir)/*.png)))) \
-                 $(addsuffix .h,$(notdir $(wildcard $(foreach dir,$(GRAPHICS),$(dir)/*.bmp))))                 $(addsuffix .h,$(notdir $(wildcard $(foreach dir,$(GRAPHICS),$(dir)/*.png)))) \
-                 $(addsuffix .h,$(notdir $(wildcard $(foreach dir,$(GRAPHICS),$(dir)/*.bmp))))
-                 $(addsuffix .h,$(notdir $(wildcard $(foreach dir,$(GRAPHICS),$(dir)/*.png)))) \
-                 $(addsuffix .h,$(notdir $(wildcard $(foreach dir,$(GRAPHICS),$(dir)/*.bmp))))
-                 $(addsuffix .h,$(notdir $(wildcard $(foreach dir,$(GRAPHICS),$(dir)/*.png)))) \
-                 $(addsuffix .h,$(notdir $(wildcard $(foreach dir,$(GRAPHICS),$(dir)/*.bmp))))
-
+                 $(patsubst %.png,%.h,$(notdir $(wildcard $(foreach dir,$(GRAPHICS),$(dir)/*.png)))) \
+                 $(patsubst %.bmp,%.h,$(notdir $(wildcard $(foreach dir,$(GRAPHICS),$(dir)/*.bmp))))
 export INCLUDE	:=	$(foreach dir,$(INCLUDES),-iquote $(CURDIR)/$(dir)) \
 					$(foreach dir,$(LIBDIRS),-I$(dir)/include) \
 					-I$(CURDIR)/$(BUILD)
