@@ -32,6 +32,14 @@
 /**
  * Perform cleanup and prepare the state for shutdown or transition.
  */
+struct Entity {
+    int x, y;
+    int dx, dy;
+    int width, height;
+    int type; // 0 = Player, 1 = Shadow
+    bool active;
+};
+
 class State_Level1 : public GameState {
 public:
     static State_Level1 instance;
@@ -46,9 +54,13 @@ public:
 private:
     Game* game;
     OBJ_ATTR obj_buffer[128];
-    int player_x;
-    int player_y;
+    Entity entities[16];
+    int num_entities;
     bool inCutscene;
+    int camera_x;
+    int camera_y;
+
+    bool checkCollision(Entity& a, Entity& b);
 
 };
 

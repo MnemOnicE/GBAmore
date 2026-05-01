@@ -6,17 +6,13 @@
 #include "Game.h"
 #include "UI.h"
 #include "chipmunk.h"
+#include "shadow.h"
 #include <tonc.h>
 #include <maxmod.h>
 #include "soundbank.h"
+
 State_Level1 State_Level1::instance;
 
-/**
- * @brief Construct a Level 1 state with default values.
- *
- * Initializes the state as not in a cutscene and with no associated game context
- * (sets `game` to `nullptr` and `inCutscene` to `false`).
- */
 State_Level1::State_Level1() : game(nullptr), inCutscene(false) {
 }
 
@@ -26,6 +22,8 @@ State_Level1::~State_Level1() {
 void State_Level1::init(Game* gameContext) {
     this->game = gameContext;
     inCutscene = false;
+    camera_x = 0;
+    camera_y = 0;
 
     // Clear screen
     UI::clear();
@@ -39,45 +37,40 @@ void State_Level1::init(Game* gameContext) {
     // Initialize shadowed OAM buffer
     oam_init(obj_buffer, 128);
 
-    // Copy chipmunk tiles and palette to object VRAM
-    memcpy32(tile_mem_obj[0], chipmunkTiles, chipmunkTilesLen / 4);
-    memcpy32(pal_obj_mem, chipmunkPal, chipmunkPalLen / 4);
+    // Load the Chipmunk into Tile Index 0 and PalBank 0:
+    memcpy32(&tile_mem[4][0], chipmunkTiles, chipmunkTilesLen / 4);
+    memcpy32(pal_obj_bank[0], chipmunkPal, chipmunkPalLen / 4);
 
-    // Set up object attributes for our player sprite
-    // ATTR0_SQUARE: 16x16 is square
-    // ATTR0_COLOR_16: 4bpp (16 colors)
-    // ATTR1_SIZE_16: 16x16 sprite size
-    // ATTR2_PALBANK(0): Use palette bank 0
-    // ATTR2_ID(0): Start at tile index 0
-    obj_set_attr(&obj_buffer[0],
-                 ATTR0_SQUARE,
-                 ATTR1_SIZE_16,
-                 ATTR2_PALBANK(0) | 0);
+    // Load the Shadow into Tile Index 8 (assuming 16x16 chipmunk is 4 tiles, index 8 is safe) and PalBank 1:
+    memcpy32(&tile_mem[4][8], shadowTiles, shadowTilesLen / 4);
+    memcpy32(pal_obj_bank[1], shadowPal, shadowPalLen / 4);
 
-    // Initial position
-    player_x = 112; // Middle of screen (240/2 - 16/2)
-    player_y = 72;  // Middle of screen (160/2 - 16/2)
-    obj_set_pos(&obj_buffer[0], player_x, player_y);
+    num_entities = 2;
+    // Player
+    entities[0] = {112, 72, 0, 0, 16, 16, 0, true};
+    // Patrolling Shadow
+    entities[1] = {180, 100, 1, 0, 16, 16, 1, true};
+
+    // Set inactive for remaining entities just to be safe
+    for (int i = 2; i < 16; i++) {
+        entities[i].active = false;
+    }
 
     // Enable Objects (sprites) and 1D object mapping
     REG_DISPCNT |= DCNT_OBJ | DCNT_OBJ_1D;
 
     // Load background via Background wrapper (BG1, CBB 1, SBB 29, 4bpp)
     Background::load(bg_level1Tiles, bg_level1TilesLen, bg_level1Map, bg_level1MapLen, bg_level1Pal, bg_level1PalLen, 1, 29, 1, false);
-
 }
 
-/**
- * @brief Process input, move the player, update camera/scroll, and handle state transitions.
- *
- * Updates player position from directional input and clamps it to a 256×256 map for a 16×16 sprite.
- * Centers and clamps a 240×160 viewport on the player, writes the viewport to BG1 scroll registers,
- * and places the player sprite at screen-relative coordinates. Handles global state transitions:
- * - Pressing Select switches to the map state.
- * - When in a cutscene, pressing A returns to the nest state.
- * If the player is inside the Agate pickup region and presses A, enters a cutscene, increments
- * the game's agatesCollected counter, clears the UI and disables object rendering.
- */
+bool State_Level1::checkCollision(Entity& a, Entity& b) {
+    if (!a.active || !b.active) return false;
+    return (a.x < b.x + b.width &&
+            a.x + a.width > b.x &&
+            a.y < b.y + b.height &&
+            a.y + a.height > b.y);
+}
+
 void State_Level1::update() {
     if (inCutscene) {
         if (key_hit(KEY_A)) {
@@ -99,17 +92,40 @@ void State_Level1::update() {
     if (key_is_down(KEY_LEFT))  dx -= 2;
     if (key_is_down(KEY_RIGHT)) dx += 2;
 
-    player_x += dx;
-    player_y += dy;
+    entities[0].dx = dx;
+    entities[0].dy = dy;
+
+    entities[0].x += entities[0].dx;
+    entities[0].y += entities[0].dy;
 
     // Clamp coordinates to screen boundaries
-    if (player_x < 0) player_x = 0;
-    if (player_x > 256 - 16) player_x = 256 - 16;
-    if (player_y < 0) player_y = 0;
-    if (player_y > 256 - 16) player_y = 256 - 16;
+    if (entities[0].x < 0) entities[0].x = 0;
+    if (entities[0].x > 256 - 16) entities[0].x = 256 - 16;
+    if (entities[0].y < 0) entities[0].y = 0;
+    if (entities[0].y > 256 - 16) entities[0].y = 256 - 16;
 
-    int camera_x = player_x - (240 / 2) + (16 / 2); // Center X
-    int camera_y = player_y - (160 / 2) + (16 / 2); // Center Y
+    // Make the Shadow patrol:
+    entities[1].x += entities[1].dx;
+    if (entities[1].x < 150) {
+        entities[1].x = 150;
+        entities[1].dx *= -1;
+    } else if (entities[1].x > 210) {
+        entities[1].x = 210;
+        entities[1].dx *= -1;
+    }
+
+    // Check collision:
+    for (int i = 1; i < num_entities; ++i) {
+        if (entities[i].active && checkCollision(entities[0], entities[i])) {
+            entities[0].x = 112; // Soft Reset
+            entities[0].y = 72;
+            mmEffect(SFX_HURT);  // Trigger Maxmod
+            break;
+        }
+    }
+
+    camera_x = entities[0].x - (240 / 2) + (16 / 2); // Center X
+    camera_y = entities[0].y - (160 / 2) + (16 / 2); // Center Y
 
     // Clamp camera to the 256x256 map bounds
     if (camera_x < 0) camera_x = 0;
@@ -121,11 +137,8 @@ void State_Level1::update() {
     REG_BG1HOFS = camera_x;
     REG_BG1VOFS = camera_y;
 
-    // Draw sprite relative to the camera
-    obj_set_pos(&obj_buffer[0], player_x - camera_x, player_y - camera_y);
-
     // Check win condition
-    if (player_x >= 112 && player_x < 128 && player_y >= 16 && player_y < 32) {
+    if (entities[0].x >= 112 && entities[0].x < 128 && entities[0].y >= 16 && entities[0].y < 32) {
         if (key_hit(KEY_A)) {
             mmEffect(SFX_LEVELUP);
             inCutscene = true;
@@ -139,43 +152,42 @@ void State_Level1::update() {
     }
 }
 
-/**
- * @brief Updates hardware OAM from the shadow OAM when gameplay is active.
- *
- * Copies the first sprite entry from the shadow OAM buffer into hardware OAM
- * unless the state is in a cutscene, in which case no sprite data is written.
- */
 void State_Level1::draw() {
     // Nothing to do for now, handled by TTE printing directly
 
     if (!inCutscene) {
+        for (int i = 0; i < 128; i++) {
+            if (i < num_entities && entities[i].active) {
+                u16 attr2 = (entities[i].type == 0) ? (ATTR2_PALBANK(0) | 0) : (ATTR2_PALBANK(1) | 8);
+                obj_set_attr(&obj_buffer[i],
+                             ATTR0_SQUARE,
+                             ATTR1_SIZE_16,
+                             attr2);
+                obj_set_pos(&obj_buffer[i], entities[i].x - camera_x, entities[i].y - camera_y);
+            } else {
+                obj_set_attr(&obj_buffer[i], ATTR0_HIDE, 0, 0);
+            }
+        }
+
         // Copy the shadowed OAM buffer to hardware OAM memory
-        oam_copy(oam_mem, obj_buffer, 1);
+        oam_copy(oam_mem, obj_buffer, 128);
     }
 }
 
-/**
- * @brief Clean up and reset rendering state when leaving Level 1.
- *
- * Resets background scroll offsets, clears the UI and object attribute memory (removing the player sprite),
- * disables sprite rendering and 1D object mapping, and disables background 1 so no visual state bleeds into the next state.
- */
 void State_Level1::teardown() {
     // Reset background scroll to prevent bleeding into other states
     REG_BG1HOFS = 0;
     REG_BG1VOFS = 0;
 
-
     UI::clear();
 
     // Clear out OAM and update hardware to remove the sprite
     oam_init(obj_buffer, 128);
-    oam_copy(oam_mem, obj_buffer, 1);
+    oam_copy(oam_mem, obj_buffer, 128);
 
     // Disable objects
     REG_DISPCNT &= ~(DCNT_OBJ | DCNT_OBJ_1D);
 
     // Disable background 1
     REG_DISPCNT &= ~DCNT_BG1;
-
 }
