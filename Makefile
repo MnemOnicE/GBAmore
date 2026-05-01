@@ -105,15 +105,11 @@ endif
 
 export OFILES_BIN := $(addsuffix .o,$(BINFILES))
 
-
-
 export OFILES_SOURCES := $(CPPFILES:.cpp=.o) $(CFILES:.c=.o) $(SFILES:.s=.o)
-export OFILES_SOURCES += $(patsubst %.png,%.o,$(notdir $(wildcard $(foreach dir,$(GRAPHICS),$(dir)/*.png))))
-export OFILES_SOURCES += $(patsubst %.bmp,%.o,$(notdir $(wildcard $(foreach dir,$(GRAPHICS),$(dir)/*.bmp))))
 
-export OFILES := $(OFILES_BIN) $(OFILES_SOURCES)
+export OFILES := $(OFILES_BIN) $(OFILES_SOURCES) chipmunk.o
 
-export HFILES := $(addsuffix .h,$(subst .,_,$(BINFILES)))
+export HFILES := $(addsuffix .h,$(subst .,_,$(BINFILES))) chipmunk.h
 export INCLUDE	:=	$(foreach dir,$(INCLUDES),-iquote $(CURDIR)/$(dir)) \
 					$(foreach dir,$(LIBDIRS),-I$(dir)/include) \
 					-I$(CURDIR)/$(BUILD)
@@ -170,7 +166,11 @@ soundbank.bin soundbank.h : $(AUDIOFILES)
 
 
 
-
+#---------------------------------------------------------------------------------
+-include $(DEPSDIR)/*.d
+#---------------------------------------------------------------------------------------
+endif
+#---------------------------------------------------------------------------------------
 -include $(DEPSDIR)/*.d
 #---------------------------------------------------------------------------------------
 endif
