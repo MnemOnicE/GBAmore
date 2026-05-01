@@ -102,8 +102,6 @@ endif
 #---------------------------------------------------------------------------------
 # build a list of auto-generated c files
 #---------------------------------------------------------------------------------
-export CFILES	+=	$(patsubst %.png,%.c,$(notdir $(wildcard $(foreach dir,$(GRAPHICS),$(dir)/*.png))))
-export CFILES	+=	$(patsubst %.bmp,%.c,$(notdir $(wildcard $(foreach dir,$(GRAPHICS),$(dir)/*.bmp))))
 
 export OFILES_BIN := $(addsuffix .o,$(BINFILES))
 
@@ -111,9 +109,7 @@ export OFILES_SOURCES := $(CPPFILES:.cpp=.o) $(CFILES:.c=.o) $(SFILES:.s=.o)
 
 export OFILES := $(OFILES_BIN) $(OFILES_SOURCES)
 
-export HFILES := $(addsuffix .h,$(subst .,_,$(BINFILES))) \
-                 $(patsubst %.png,%.h,$(notdir $(wildcard $(foreach dir,$(GRAPHICS),$(dir)/*.png)))) \
-                 $(patsubst %.bmp,%.h,$(notdir $(wildcard $(foreach dir,$(GRAPHICS),$(dir)/*.bmp))))
+export HFILES := $(addsuffix .h,$(subst .,_,$(BINFILES)))
 export INCLUDE	:=	$(foreach dir,$(INCLUDES),-iquote $(CURDIR)/$(dir)) \
 					$(foreach dir,$(LIBDIRS),-I$(dir)/include) \
 					-I$(CURDIR)/$(BUILD)
@@ -170,18 +166,6 @@ soundbank.bin soundbank.h : $(AUDIOFILES)
 
 
 
-#---------------------------------------------------------------------------------
-# rules for processing images with grit
-#---------------------------------------------------------------------------------
-%.c %.h : %.png %.grit
-#---------------------------------------------------------------------------------
-	@echo "grit $<"
-	@grit $< -fts -o$*
-
-%.c %.h : %.bmp %.grit
-#---------------------------------------------------------------------------------
-	@echo "grit $<"
-	@grit $< -fts -o$*
 
 -include $(DEPSDIR)/*.d
 #---------------------------------------------------------------------------------------
