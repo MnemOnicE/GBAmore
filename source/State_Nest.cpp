@@ -118,8 +118,9 @@ void State_Nest::update() {
             game->changeState(&State_Level1::instance);
         } else if (player_x < BED_ZONE_X && player_y < BED_ZONE_Y) {
             // Bed
+            game->save();
             UI::clear();
-            UI::print(64, 72, "You rested.");
+            UI::print(64, 72, "Game Saved.");
             interacting = true;
         } else if (player_x > TV_ZONE_X && player_y < TV_ZONE_Y) {
             // TV

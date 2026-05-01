@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include "GameState.h"
+#include <tonc.h>
 
 /**
  * Game class that manages the active GameState and provides lifecycle operations.
@@ -44,6 +45,11 @@ struct PlayerProfile {
     int currentRoomY;
 };
 
+struct SaveBlock {
+    int magicSignature;
+    PlayerProfile profile;
+};
+
 class Game {
 public:
     Game();
@@ -53,6 +59,9 @@ public:
 
     void update();
     void draw();
+
+    void save();
+    void load();
 
     PlayerProfile profile;
 private:
