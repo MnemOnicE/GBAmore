@@ -7,8 +7,16 @@
 #include "UI.h"
 #include "chipmunk.h"
 #include <tonc.h>
+#include <maxmod.h>
+#include "soundbank.h"
 State_Level1 State_Level1::instance;
 
+/**
+ * @brief Construct a Level 1 state with default values.
+ *
+ * Initializes the state as not in a cutscene and with no associated game context
+ * (sets `game` to `nullptr` and `inCutscene` to `false`).
+ */
 State_Level1::State_Level1() : game(nullptr), inCutscene(false) {
 }
 
@@ -119,6 +127,7 @@ void State_Level1::update() {
     // Check win condition
     if (player_x >= 112 && player_x < 128 && player_y >= 16 && player_y < 32) {
         if (key_hit(KEY_A)) {
+            mmEffect(SFX_LEVELUP);
             inCutscene = true;
             game->profile.agatesCollected++;
             UI::clear();
