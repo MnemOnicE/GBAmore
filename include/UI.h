@@ -3,6 +3,20 @@
 
 #include <tonc.h>
 
+/**
+ * Initialize the UI subsystem and allocate or configure any display resources required before use.
+ */
+ 
+/**
+ * Clear the UI display and reset any UI-related state to its default.
+ */
+
+/**
+ * Render a null-terminated C string at the specified screen coordinates.
+ * @param x Horizontal coordinate where the text will start.
+ * @param y Vertical coordinate where the text will start.
+ * @param text Null-terminated C string to render.
+ */
 class UI {
 public:
     static void init();
