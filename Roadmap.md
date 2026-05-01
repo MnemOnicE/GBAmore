@@ -30,7 +30,7 @@
 
 ## Phase 8: The Background Asset Pipeline
 **Goal:** Move from pure text backgrounds to actual pixel-art environments.
-*   **Tasks:** Update the `Makefile` to process background tilesets via `grit`. Write a C++ wrapper to load tilemaps created in external software (like Tiled). This is when the game stops looking like a terminal and starts looking like a Pokémon game.
+*   **Tasks:** Write a C++ wrapper to load tilemaps created in external software (like Tiled) and integrate background tilesets into the asset pipeline. This is when the game stops looking like a terminal and starts looking like a Pokémon game.
 *   **Hardware Scrolling:** Implement background map scrolling utilizing the GBA's hardware registers (`REG_BG0HOFS`, `REG_BG0VOFS`) to allow levels larger than the 240x160 screen resolution.
 
 ## Phase 9: The Audio Engine (Maxmod)
