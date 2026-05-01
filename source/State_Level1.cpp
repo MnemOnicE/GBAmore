@@ -11,6 +11,12 @@
 #include "soundbank.h"
 State_Level1 State_Level1::instance;
 
+/**
+ * @brief Construct a Level 1 state with default values.
+ *
+ * Initializes the state as not in a cutscene and with no associated game context
+ * (sets `game` to `nullptr` and `inCutscene` to `false`).
+ */
 State_Level1::State_Level1() : game(nullptr), inCutscene(false) {
 }
 
