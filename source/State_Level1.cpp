@@ -1,42 +1,29 @@
 #include "State_Level1.h"
+#include "State_Nest.h"
 #include "Game.h"
 #include "UI.h"
 #include "chipmunk.h"
 #include <tonc.h>
+State_Level1 State_Level1::instance;
 
-/**
- * @brief Construct a Level 1 game state with no associated Game context.
- *
- * Initializes the internal `game` pointer to `nullptr`.
- */
-State_Level1::State_Level1() : game(nullptr) {
+State_Level1::State_Level1() : game(nullptr), inCutscene(false) {
 }
 
-/**
- * @brief Destroy the Level 1 state instance.
- *
- * No explicit cleanup is performed by this destructor; any owned resources
- * are managed externally or have no teardown requirements.
- */
 State_Level1::~State_Level1() {
 }
 
-/**
- * @brief Initialize Level 1 state with the provided game context.
- *
- * Stores the provided game context pointer, clears the UI, and prints the
- * level title ("Level 1: Memory Prototype") at screen coordinates (16, 64).
- *
- * @param gameContext Pointer to the current Game context to be stored by the state.
- */
 void State_Level1::init(Game* gameContext) {
     this->game = gameContext;
+    inCutscene = false;
 
     // Clear screen
     UI::clear();
 
     // Print level text
     UI::print(16, 64, "Level 1: Memory Prototype");
+
+    // Print Agate
+    UI::print(112, 16, "*");
 
     // Initialize shadowed OAM buffer
     oam_init(obj_buffer, 128);
@@ -66,13 +53,13 @@ void State_Level1::init(Game* gameContext) {
 
 }
 
-/**
- * @brief Executes per-frame update logic for the Level 1 game state.
- *
- * Currently no update behavior is implemented.
- */
 void State_Level1::update() {
-    // Nothing for now
+    if (inCutscene) {
+        if (key_hit(KEY_A)) {
+            game->changeState(&State_Nest::instance);
+        }
+        return;
+    }
 
     int dx = 0;
     int dy = 0;
@@ -94,27 +81,29 @@ void State_Level1::update() {
     // Update position in OAM buffer
     obj_set_pos(&obj_buffer[0], player_x, player_y);
 
+    // Check win condition
+    if (player_x >= 112 && player_x <= 128 && player_y >= 16 && player_y <= 32) {
+        if (key_hit(KEY_A)) {
+            inCutscene = true;
+            game->profile.agatesCollected++;
+            UI::clear();
+            UI::print(16, 64, "You found an Agate!");
+            UI::print(16, 80, "Press A to return to Nest");
+            // Disable sprite
+            REG_DISPCNT &= ~(DCNT_OBJ | DCNT_OBJ_1D);
+        }
+    }
 }
 
-/**
- * @brief No-op render step for the Level 1 state.
- *
- * The level's visual output is produced elsewhere (direct TTE printing), so this
- * draw hook intentionally performs no rendering.
- */
 void State_Level1::draw() {
     // Nothing to do for now, handled by TTE printing directly
 
-    // Copy the shadowed OAM buffer to hardware OAM memory
-    oam_copy(oam_mem, obj_buffer, 1);
-
+    if (!inCutscene) {
+        // Copy the shadowed OAM buffer to hardware OAM memory
+        oam_copy(oam_mem, obj_buffer, 1);
+    }
 }
 
-/**
- * @brief Tear down the level and clear on-screen UI.
- *
- * Ensures any UI elements printed for this state are removed from the display.
- */
 void State_Level1::teardown() {
 
     UI::clear();

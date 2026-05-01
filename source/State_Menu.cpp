@@ -1,8 +1,10 @@
+#include "State_Nest.h"
 #include "State_Menu.h"
 #include "State_Level1.h"
 #include "Game.h"
 #include "UI.h"
 #include <tonc.h>
+State_Menu State_Menu::instance;
 
 /**
  * @brief Construct a new State_Menu instance.
@@ -47,7 +49,7 @@ void State_Menu::init(Game* gameContext) {
  */
 void State_Menu::update() {
     if (key_hit(KEY_START)) {
-        game->changeState(new State_Level1());
+        game->changeState(&State_Nest::instance);
     }
 }
 

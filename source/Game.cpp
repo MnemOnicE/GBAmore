@@ -6,6 +6,8 @@
  * Initializes the Game instance with no active state (sets `currentState` to `nullptr`).
  */
 Game::Game() : currentState(nullptr) {
+    profile.agatesCollected = 0;
+    profile.canDash = false;
 }
 
 /**
@@ -16,7 +18,7 @@ Game::Game() : currentState(nullptr) {
 Game::~Game() {
     if (currentState) {
         currentState->teardown();
-        delete currentState;
+
     }
 }
 
@@ -31,7 +33,7 @@ Game::~Game() {
 void Game::changeState(GameState* newState) {
     if (currentState) {
         currentState->teardown();
-        delete currentState; // Assuming the game owns the state memory and states are dynamically allocated. For now, we assume simple pointer transfer
+         // Assuming the game owns the state memory and states are dynamically allocated. For now, we assume simple pointer transfer
     }
 
     currentState = newState;

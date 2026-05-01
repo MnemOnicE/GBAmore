@@ -34,6 +34,7 @@
  */
 class State_Menu : public GameState {
 public:
+    static State_Menu instance;
     State_Menu();
     ~State_Menu();
 

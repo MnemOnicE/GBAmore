@@ -19,7 +19,7 @@ int main()
 
     // Initialize Game context and push State_Menu
     Game game;
-    game.changeState(new State_Menu());
+    game.changeState(&State_Menu::instance);
 
     // Basic game loop
     while(1)

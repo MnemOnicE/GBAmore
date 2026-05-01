@@ -33,6 +33,7 @@
  */
 class State_Level1 : public GameState {
 public:
+    static State_Level1 instance;
     State_Level1();
     ~State_Level1();
 
@@ -46,6 +47,8 @@ private:
     OBJ_ATTR obj_buffer[128];
     int player_x;
     int player_y;
+    bool inCutscene;
+
 };
 
 #endif // STATE_LEVEL1_H
