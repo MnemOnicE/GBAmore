@@ -142,7 +142,21 @@ $(OUTPUT).elf	:	$(OFILES)
 	@echo linking $(notdir $@)
 	@$(LD) $(LDFLAGS) $(OFILES) $(LIBPATHS) $(LIBS) -o $@
 
-$(OFILES_SOURCES) : $(HFILES)
+$(OFILES_SOURCES) bg_level1.o chipmunk.o : $(HFILES)
+
+
+bg_level1.s bg_level1.h: ../graphics/bg_level1.bmp ../graphics/bg_level1.grit
+	grit $< -fts -obg_level1
+
+chipmunk.s chipmunk.h: ../graphics/chipmunk.bmp ../graphics/chipmunk.grit
+	grit $< -fts -ochipmunk
+
+
+
+bg_level1.o: bg_level1.s bg_level1.h
+chipmunk.o: chipmunk.s chipmunk.h
+
+
 
 #---------------------------------------------------------------------------------
 # The bin2o rule should be copied and modified
