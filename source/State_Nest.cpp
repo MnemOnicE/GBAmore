@@ -5,6 +5,16 @@
 #include "chipmunk.h"
 #include <tonc.h>
 
+const int BED_ZONE_X = 50;
+const int BED_ZONE_Y = 40;
+const int TV_ZONE_X = 140;
+const int TV_ZONE_Y = 40;
+const int RING_ZONE_X = 50;
+const int RING_ZONE_Y = 100;
+const int DOOR_ZONE_X = 140;
+const int DOOR_ZONE_Y = 100;
+
+
 State_Nest State_Nest::instance;
 
 State_Nest::State_Nest() : game(nullptr), interacting(false) {
@@ -103,20 +113,20 @@ void State_Nest::update() {
     obj_set_pos(&obj_buffer[0], player_x, player_y);
 
     if (key_hit(KEY_A)) {
-        if (player_x > 140 && player_y > 100) {
+        if (player_x > DOOR_ZONE_X && player_y > DOOR_ZONE_Y) {
             // Door
             game->changeState(&State_Level1::instance);
-        } else if (player_x < 50 && player_y < 40) {
+        } else if (player_x < BED_ZONE_X && player_y < BED_ZONE_Y) {
             // Bed
             UI::clear();
             UI::print(64, 72, "You rested.");
             interacting = true;
-        } else if (player_x > 140 && player_y < 40) {
+        } else if (player_x > TV_ZONE_X && player_y < TV_ZONE_Y) {
             // TV
             UI::clear();
             UI::print(64, 72, "The static hums...");
             interacting = true;
-        } else if (player_x < 50 && player_y > 100) {
+        } else if (player_x < RING_ZONE_X && player_y > RING_ZONE_Y) {
             // Ring
             UI::clear();
             char buf[64];
@@ -138,6 +148,6 @@ void State_Nest::draw() {
 void State_Nest::teardown() {
     UI::clear();
     oam_init(obj_buffer, 128);
-oam_copy(oam_mem, obj_buffer, 128);
+    oam_copy(oam_mem, obj_buffer, 1);
     REG_DISPCNT &= ~(DCNT_OBJ | DCNT_OBJ_1D);
 }
