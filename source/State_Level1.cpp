@@ -59,6 +59,17 @@ void State_Level1::init(Game* gameContext) {
 
 }
 
+/**
+ * @brief Process input, move the player, update camera/scroll, and handle state transitions.
+ *
+ * Updates player position from directional input and clamps it to a 256×256 map for a 16×16 sprite.
+ * Centers and clamps a 240×160 viewport on the player, writes the viewport to BG1 scroll registers,
+ * and places the player sprite at screen-relative coordinates. Handles global state transitions:
+ * - Pressing Select switches to the map state.
+ * - When in a cutscene, pressing A returns to the nest state.
+ * If the player is inside the Agate pickup region and presses A, enters a cutscene, increments
+ * the game's agatesCollected counter, clears the UI and disables object rendering.
+ */
 void State_Level1::update() {
     if (inCutscene) {
         if (key_hit(KEY_A)) {
@@ -85,12 +96,25 @@ void State_Level1::update() {
 
     // Clamp coordinates to screen boundaries
     if (player_x < 0) player_x = 0;
-    if (player_x > 240 - 16) player_x = 240 - 16;
+    if (player_x > 256 - 16) player_x = 256 - 16;
     if (player_y < 0) player_y = 0;
-    if (player_y > 160 - 16) player_y = 160 - 16;
+    if (player_y > 256 - 16) player_y = 256 - 16;
 
-    // Update position in OAM buffer
-    obj_set_pos(&obj_buffer[0], player_x, player_y);
+    int camera_x = player_x - (240 / 2) + (16 / 2); // Center X
+    int camera_y = player_y - (160 / 2) + (16 / 2); // Center Y
+
+    // Clamp camera to the 256x256 map bounds
+    if (camera_x < 0) camera_x = 0;
+    if (camera_x > 256 - 240) camera_x = 256 - 240;
+    if (camera_y < 0) camera_y = 0;
+    if (camera_y > 256 - 160) camera_y = 256 - 160;
+
+    // Scroll the background
+    REG_BG1HOFS = camera_x;
+    REG_BG1VOFS = camera_y;
+
+    // Draw sprite relative to the camera
+    obj_set_pos(&obj_buffer[0], player_x - camera_x, player_y - camera_y);
 
     // Check win condition
     if (player_x >= 112 && player_x < 128 && player_y >= 16 && player_y < 32) {
@@ -106,6 +130,12 @@ void State_Level1::update() {
     }
 }
 
+/**
+ * @brief Updates hardware OAM from the shadow OAM when gameplay is active.
+ *
+ * Copies the first sprite entry from the shadow OAM buffer into hardware OAM
+ * unless the state is in a cutscene, in which case no sprite data is written.
+ */
 void State_Level1::draw() {
     // Nothing to do for now, handled by TTE printing directly
 
@@ -115,7 +145,17 @@ void State_Level1::draw() {
     }
 }
 
+/**
+ * @brief Clean up and reset rendering state when leaving Level 1.
+ *
+ * Resets background scroll offsets, clears the UI and object attribute memory (removing the player sprite),
+ * disables sprite rendering and 1D object mapping, and disables background 1 so no visual state bleeds into the next state.
+ */
 void State_Level1::teardown() {
+    // Reset background scroll to prevent bleeding into other states
+    REG_BG1HOFS = 0;
+    REG_BG1VOFS = 0;
+
 
     UI::clear();
 
