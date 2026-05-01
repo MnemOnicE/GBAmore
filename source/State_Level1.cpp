@@ -121,7 +121,7 @@ void State_Level1::draw() {
  */
 void State_Level1::teardown() {
 
-    UI::clear();
+    oam_copy(oam_mem, obj_buffer, 128);
 
     // Clear out OAM and update hardware to remove the sprite
     oam_init(obj_buffer, 128);
