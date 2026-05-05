@@ -65,10 +65,14 @@ void State_Level1::init(Game* gameContext) {
 
 bool State_Level1::checkCollision(Entity& a, Entity& b) {
     if (!a.active || !b.active) return false;
-    return (a.x < b.x + b.width &&
-            a.x + a.width > b.x &&
-            a.y < b.y + b.height &&
-            a.y + a.height > b.y);
+    int ax = a.x + 3; int ay = a.y + 3;
+    int aw = a.width - 6; int ah = a.height - 6;
+
+    int bx = b.x + 3; int by = b.y + 3;
+    int bw = b.width - 6; int bh = b.height - 6;
+
+    return (ax < bx + bw && ax + aw > bx &&
+            ay < by + bh && ay + ah > by);
 }
 
 void State_Level1::update() {
@@ -87,10 +91,16 @@ void State_Level1::update() {
     int dx = 0;
     int dy = 0;
 
-    if (key_is_down(KEY_UP))    dy -= 2;
-    if (key_is_down(KEY_DOWN))  dy += 2;
-    if (key_is_down(KEY_LEFT))  dx -= 2;
-    if (key_is_down(KEY_RIGHT)) dx += 2;
+    int speed = 2;
+    // If the player holds B and has the upgrade, double the speed
+    if (key_is_down(KEY_B) && game->profile.canDash) {
+        speed = 4;
+    }
+
+    if (key_is_down(KEY_UP))    dy -= speed;
+    if (key_is_down(KEY_DOWN))  dy += speed;
+    if (key_is_down(KEY_LEFT))  dx -= speed;
+    if (key_is_down(KEY_RIGHT)) dx += speed;
 
     entities[0].dx = dx;
     entities[0].dy = dy;
@@ -143,6 +153,7 @@ void State_Level1::update() {
             mmEffect(SFX_LEVELUP);
             inCutscene = true;
             game->profile.agatesCollected++;
+            game->profile.canDash = true;
             UI::clear();
             UI::print(16, 64, "You found an Agate!");
             UI::print(16, 80, "Press A to return to Nest");
