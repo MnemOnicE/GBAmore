@@ -2,6 +2,7 @@
 #include "State_Level1.h"
 #include "Game.h"
 #include "UI.h"
+#include "Utils.h"
 #include "chipmunk.h"
 #include <tonc.h>
 
@@ -54,35 +55,6 @@ void State_Nest::init(Game* gameContext) {
     REG_DISPCNT |= DCNT_OBJ | DCNT_OBJ_1D;
 }
 
-static void itoa(int n, char s[]) {
-    int i, sign;
-    if ((sign = n) < 0)
-        n = -n;
-    i = 0;
-    do {
-        s[i++] = n % 10 + '0';
-    } while ((n /= 10) > 0);
-    if (sign < 0)
-        s[i++] = '-';
-    s[i] = '\0';
-
-    int j, c;
-    for (j = 0, i = i - 1; j < i; j++, i--) {
-        c = s[j];
-        s[j] = s[i];
-        s[i] = c;
-    }
-}
-
-static void strConcat(char* dest, const char* src1, const char* src2, const char* src3) {
-    int i = 0;
-    while (*src1) dest[i++] = *src1++;
-    while (*src2) dest[i++] = *src2++;
-    if (src3) {
-        while (*src3) dest[i++] = *src3++;
-    }
-    dest[i] = '\0';
-}
 
 void State_Nest::update() {
     if (interacting) {
