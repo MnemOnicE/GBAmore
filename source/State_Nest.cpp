@@ -2,6 +2,7 @@
 #include "State_Level1.h"
 #include "Game.h"
 #include "UI.h"
+#include "Utils.h"
 #include "chipmunk.h"
 #include <tonc.h>
 
@@ -80,6 +81,13 @@ static void strConcat(char* dest, int max_len, const char* src1, const char* src
     if (src1) while (*src1 && i < max_len - 1) dest[i++] = *src1++;
     if (src2) while (*src2 && i < max_len - 1) dest[i++] = *src2++;
     if (src3) while (*src3 && i < max_len - 1) dest[i++] = *src3++;
+    if (max_len <= 0) return;
+    int i = 0;
+    while (*src1 && i < max_len - 1) dest[i++] = *src1++;
+    while (*src2 && i < max_len - 1) dest[i++] = *src2++;
+    if (src3) {
+        while (*src3 && i < max_len - 1) dest[i++] = *src3++;
+    }
     dest[i] = '\0';
 }
 
