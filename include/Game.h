@@ -48,6 +48,7 @@ struct PlayerProfile {
 struct SaveBlock {
     int magicSignature;
     PlayerProfile profile;
+    u32 checksum; // Added for integrity validation
 };
 
 class Game {
