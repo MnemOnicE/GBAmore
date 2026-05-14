@@ -76,6 +76,11 @@ static void itoa(int n, char s[]) {
 }
 
 static void strConcat(char* dest, int max_len, const char* src1, const char* src2, const char* src3) {
+    if (max_len <= 0 || !dest) return;
+    int i = 0;
+    if (src1) while (*src1 && i < max_len - 1) dest[i++] = *src1++;
+    if (src2) while (*src2 && i < max_len - 1) dest[i++] = *src2++;
+    if (src3) while (*src3 && i < max_len - 1) dest[i++] = *src3++;
     if (max_len <= 0) return;
     int i = 0;
     while (*src1 && i < max_len - 1) dest[i++] = *src1++;
