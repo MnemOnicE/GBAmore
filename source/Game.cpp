@@ -108,7 +108,7 @@ void Game::save() {
     newSave.profile = this->profile;
 
     // Generate checksum for the current profile state
-    int sum = 0;
+    u32 sum = 0;
     const u8* profileBytes = (const u8*)&newSave.profile;
     for (u32 i = 0; i < sizeof(PlayerProfile); i++) {
         sum += profileBytes[i];
