@@ -2,11 +2,13 @@
 .SUFFIXES:
 #---------------------------------------------------------------------------------
 
+ifneq ($(MAKECMDGOALS),test)
 ifeq ($(strip $(DEVKITARM)),)
 $(error "Please set DEVKITARM in your environment. export DEVKITARM=<path to>devkitARM")
 endif
 
 include $(DEVKITARM)/gba_rules
+endif
 
 #---------------------------------------------------------------------------------
 # TARGET is the name of the output
@@ -116,7 +118,13 @@ export INCLUDE	:=	$(foreach dir,$(INCLUDES),-iquote $(CURDIR)/$(dir)) \
 
 export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib)
 
-.PHONY: $(BUILD) clean
+.PHONY: $(BUILD) clean test
+
+#---------------------------------------------------------------------------------
+test:
+	g++ -Iinclude source/Utils.cpp tests/test_utils.cpp -o test_suite
+	./test_suite
+	rm test_suite
 
 #---------------------------------------------------------------------------------
 $(BUILD):

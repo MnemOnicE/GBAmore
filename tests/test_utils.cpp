@@ -36,15 +36,20 @@ void test_strConcat() {
 
     std::cout << "Testing strConcat..." << std::endl;
 
-    strConcat(buf, "Hello", " World", nullptr);
+    strConcat(buf, sizeof(buf), "Hello", " World", nullptr);
     assert(std::strcmp(buf, "Hello World") == 0);
     std::cout << "  strConcat(2 strings) passed" << std::endl;
 
-    strConcat(buf, "Hello", " ", "World");
+    strConcat(buf, sizeof(buf), "Hello", " ", "World");
     assert(std::strcmp(buf, "Hello World") == 0);
     std::cout << "  strConcat(3 strings) passed" << std::endl;
 
-    strConcat(buf, "", "", "");
+    char smallBuf[5];
+    strConcat(smallBuf, sizeof(smallBuf), "Hello", " World", nullptr);
+    assert(std::strcmp(smallBuf, "Hell") == 0);
+    std::cout << "  strConcat bounds checking passed" << std::endl;
+
+    strConcat(buf, sizeof(buf), "", "", "");
     assert(std::strcmp(buf, "") == 0);
     std::cout << "  strConcat(empty strings) passed" << std::endl;
 }
