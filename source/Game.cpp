@@ -88,7 +88,7 @@ void Game::load() {
     // 0x4742414D is "GBAM" in hex
     if (tempSave.magicSignature == 0x4742414D) {
         // Calculate the checksum of the loaded profile
-        u32 calculatedSum = 0;
+        int calculatedSum = 0;
         const u8* profileBytes = (const u8*)&tempSave.profile;
         for (u32 i = 0; i < sizeof(PlayerProfile); i++) {
             calculatedSum += profileBytes[i];
@@ -104,12 +104,11 @@ void Game::load() {
 
 void Game::save() {
     SaveBlock newSave;
-    memset(&newSave, 0, sizeof(SaveBlock));
     newSave.magicSignature = 0x4742414D;
     newSave.profile = this->profile;
 
     // Generate checksum for the current profile state
-    u32 sum = 0;
+    int sum = 0;
     const u8* profileBytes = (const u8*)&newSave.profile;
     for (u32 i = 0; i < sizeof(PlayerProfile); i++) {
         sum += profileBytes[i];
