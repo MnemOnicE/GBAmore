@@ -167,8 +167,8 @@ void State_Level1::draw() {
     // Nothing to do for now, handled by TTE printing directly
 
     if (!inCutscene) {
-        for (int i = 0; i < 128; i++) {
-            if (i < num_entities && entities[i].active) {
+        for (int i = 0; i < num_entities; i++) {
+            if (entities[i].active) {
                 u16 attr2 = (entities[i].type == 0) ? (ATTR2_PALBANK(0) | 0) : (ATTR2_PALBANK(1) | 8);
                 obj_set_attr(&obj_buffer[i],
                              ATTR0_SQUARE,
@@ -176,6 +176,7 @@ void State_Level1::draw() {
                              attr2);
                 obj_set_pos(&obj_buffer[i], entities[i].x - camera_x, entities[i].y - camera_y);
             } else {
+                // Hide only entities that are part of the active pool but currently disabled
                 obj_set_attr(&obj_buffer[i], ATTR0_HIDE, 0, 0);
             }
         }
