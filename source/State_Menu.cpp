@@ -1,6 +1,5 @@
 #include "State_Nest.h"
 #include "State_Menu.h"
-#include "State_Level1.h"
 #include "Game.h"
 #include "UI.h"
 #include <tonc.h>
@@ -49,6 +48,7 @@ void State_Menu::init(Game* gameContext) {
  * @brief Polls input and transitions the game's state to the Nest when START is pressed.
  *
  * When the START button is detected, replaces the current game state with the State_Nest instance.
+ * When the START button is detected, replaces the current game state with the State_Nest::instance.
  */
 void State_Menu::update() {
     if (key_hit(KEY_START)) {

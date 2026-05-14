@@ -15,6 +15,9 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    - name: Run tests
+      run: make test
+
     - name: Compile the game
       run: make
 
