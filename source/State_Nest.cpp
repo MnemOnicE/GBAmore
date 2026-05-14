@@ -74,13 +74,12 @@ static void itoa(int n, char s[]) {
     }
 }
 
-static void strConcat(char* dest, const char* src1, const char* src2, const char* src3) {
+static void strConcat(char* dest, int max_len, const char* src1, const char* src2, const char* src3) {
+    if (max_len <= 0 || !dest) return;
     int i = 0;
-    while (*src1) dest[i++] = *src1++;
-    while (*src2) dest[i++] = *src2++;
-    if (src3) {
-        while (*src3) dest[i++] = *src3++;
-    }
+    if (src1) while (*src1 && i < max_len - 1) dest[i++] = *src1++;
+    if (src2) while (*src2 && i < max_len - 1) dest[i++] = *src2++;
+    if (src3) while (*src3 && i < max_len - 1) dest[i++] = *src3++;
     dest[i] = '\0';
 }
 
@@ -133,7 +132,7 @@ void State_Nest::update() {
             char buf[64];
             char numBuf[16];
             itoa(game->profile.agatesCollected, numBuf);
-            strConcat(buf, "Agates: ", numBuf, nullptr);
+            strConcat(buf, sizeof(buf), "Agates: ", numBuf, nullptr);
             UI::print(64, 72, buf);
             interacting = true;
         }
