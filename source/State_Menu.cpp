@@ -47,6 +47,7 @@ void State_Menu::init(Game* gameContext) {
 /**
  * @brief Polls input and transitions the game's state to the Nest when START is pressed.
  *
+ * When the START button is detected, replaces the current game state with the State_Nest instance.
  * When the START button is detected, replaces the current game state with the State_Nest::instance.
  */
 void State_Menu::update() {
