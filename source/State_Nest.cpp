@@ -94,16 +94,13 @@ void State_Nest::update() {
         return;
     }
 
-    int dx = 0;
-    int dy = 0;
+    // Direct coordinate mutation
+    if (key_is_down(KEY_UP))    player_y -= 2;
+    if (key_is_down(KEY_DOWN))  player_y += 2;
+    if (key_is_down(KEY_LEFT))  player_x -= 2;
+    if (key_is_down(KEY_RIGHT)) player_x += 2;
 
-    if (key_is_down(KEY_UP))    dy -= 2;
-    if (key_is_down(KEY_DOWN))  dy += 2;
-    if (key_is_down(KEY_LEFT))  dx -= 2;
-    if (key_is_down(KEY_RIGHT)) dx += 2;
-
-    player_x += dx;
-    player_y += dy;
+    // Boundary clamping
 
     if (player_x < 0) player_x = 0;
     if (player_x > 240 - 16) player_x = 240 - 16;
