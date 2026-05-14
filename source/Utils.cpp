@@ -27,8 +27,8 @@ void itoa(int n, char s[]) {
 
 void strConcat(char* dest, const char* src1, const char* src2, const char* src3) {
     int i = 0;
-    while (*src1) dest[i++] = *src1++;
-    while (*src2) dest[i++] = *src2++;
+    if (src1) while (*src1) dest[i++] = *src1++;
+    if (src2) while (*src2) dest[i++] = *src2++;
     if (src3) {
         while (*src3) dest[i++] = *src3++;
     }
