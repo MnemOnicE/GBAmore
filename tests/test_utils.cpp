@@ -9,26 +9,31 @@ void test_itoa() {
 
     std::cout << "Testing itoa..." << std::endl;
 
-    itoa(0, buf);
+    itoa(0, buf, sizeof(buf));
     assert(std::strcmp(buf, "0") == 0);
     std::cout << "  itoa(0) passed" << std::endl;
 
-    itoa(123, buf);
+    itoa(123, buf, sizeof(buf));
     assert(std::strcmp(buf, "123") == 0);
     std::cout << "  itoa(123) passed" << std::endl;
 
-    itoa(-123, buf);
+    itoa(-123, buf, sizeof(buf));
     assert(std::strcmp(buf, "-123") == 0);
     std::cout << "  itoa(-123) passed" << std::endl;
 
-    itoa(2147483647, buf);
+    itoa(2147483647, buf, sizeof(buf));
     assert(std::strcmp(buf, "2147483647") == 0);
     std::cout << "  itoa(INT_MAX) passed" << std::endl;
 
     std::cout << "  Testing itoa(INT_MIN)..." << std::endl;
-    itoa(-2147483648, buf);
+    itoa(-2147483648, buf, sizeof(buf));
     assert(std::strcmp(buf, "-2147483648") == 0);
     std::cout << "  itoa(INT_MIN) passed" << std::endl;
+
+    char smallBuf[4];
+    itoa(12345, smallBuf, sizeof(smallBuf));
+    assert(std::strcmp(smallBuf, "123") == 0);
+    std::cout << "  itoa bounds checking passed" << std::endl;
 }
 
 void test_strConcat() {
