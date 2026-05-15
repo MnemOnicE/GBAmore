@@ -113,6 +113,10 @@ export INCLUDE	:=	$(foreach dir,$(INCLUDES),-iquote $(CURDIR)/$(dir)) \
 
 export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib)
 
+.PHONY: $(BUILD) clean test all
+
+all: $(BUILD)
+
 #---------------------------------------------------------------------------------
 test:
 	g++ -Iinclude source/Utils.cpp tests/test_utils.cpp -o test_suite
