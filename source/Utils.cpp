@@ -2,6 +2,7 @@
 #include <stddef.h>
 
 void itoa(int n, char s[]) {
+    if (!s) return;
     int i, sign;
     unsigned int num;
     if ((sign = n) < 0) {
@@ -26,7 +27,7 @@ void itoa(int n, char s[]) {
 }
 
 void strConcat(char* dest, size_t destCap, const char* src1, const char* src2, const char* src3) {
-    if (destCap == 0) return;
+    if (destCap == 0 || !dest || !src1 || !src2) return;
     size_t i = 0;
     while (*src1 && i < destCap - 1) dest[i++] = *src1++;
     while (*src2 && i < destCap - 1) dest[i++] = *src2++;
