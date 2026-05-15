@@ -101,7 +101,7 @@ void State_Nest::update() {
             UI::clear();
             char buf[64];
             char numBuf[16];
-            itoa(game->profile.agatesCollected, numBuf, sizeof(numBuf));
+            itoa(game->profile.agatesCollected, numBuf);
             strConcat(buf, sizeof(buf), "Agates: ", numBuf, nullptr);
             UI::print(64, 72, buf);
             interacting = true;

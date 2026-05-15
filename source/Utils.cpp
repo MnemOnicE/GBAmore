@@ -1,9 +1,9 @@
 #include "Utils.h"
 #include <stddef.h>
+#include <string.h>
 
-void itoa(int n, char s[], size_t size) {
-    if (size == 0) return;
-    char temp[32];
+void itoa(int n, char s[]) {
+    if (!s) return;
     int i, sign;
     unsigned int num;
     if ((sign = n) < 0) {
@@ -13,20 +13,25 @@ void itoa(int n, char s[], size_t size) {
     }
     i = 0;
     do {
-        temp[i++] = num % 10 + '0';
+        s[i++] = num % 10 + '0';
     } while ((num /= 10) > 0);
     if (sign < 0)
-        temp[i++] = '-';
+        s[i++] = '-';
+    s[i] = '\0';
 
-    size_t destIdx = 0;
-    for (int j = i - 1; j >= 0 && destIdx < size - 1; j--) {
-        s[destIdx++] = temp[j];
+    int j, c;
+    for (j = 0, i = i - 1; j < i; j++, i--) {
+        c = s[j];
+        s[j] = s[i];
+        s[i] = c;
     }
-    s[destIdx] = '\0';
 }
 
 void strConcat(char* dest, size_t destCap, const char* src1, const char* src2, const char* src3) {
-    if (destCap == 0 || !dest || !src1 || !src2) return;
+    if (destCap == 0 || !dest) return;
+    dest[0] = '\0';
+    if (!src1 || !src2) return;
+
     size_t i = 0;
     while (*src1 && i < destCap - 1) dest[i++] = *src1++;
     while (*src2 && i < destCap - 1) dest[i++] = *src2++;

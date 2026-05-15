@@ -8,12 +8,11 @@ extern "C" {
 #endif
 
 /**
- * Converts an integer to a string with bounds checking.
+ * Converts an integer to a string.
  * @param n The integer to convert.
  * @param s The buffer to store the resulting string.
- * @param size The size of the buffer.
  */
-void itoa(int n, char s[], size_t size);
+void itoa(int n, char s[]);
 
 /**
  * Concatenates up to three source strings into a destination buffer with bounds checking.
