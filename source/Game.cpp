@@ -8,6 +8,7 @@
  * Initializes the Game instance with no active state (sets `currentState` to `nullptr`).
  */
 Game::Game() : currentState(nullptr) {
+    memset(&profile, 0, sizeof(PlayerProfile));
     profile.agatesCollected = 0;
     profile.canDash = false;
     profile.currentRoomX = 0;
