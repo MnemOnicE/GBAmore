@@ -76,6 +76,15 @@ void Game::draw() {
     }
 }
 
+u32 Game::calculateChecksum(const PlayerProfile& profile) {
+    u32 sum = 0;
+    const u8* bytes = (const u8*)&profile;
+    for (u32 i = 0; i < sizeof(PlayerProfile); i++) {
+        sum += bytes[i];
+    }
+    return sum;
+}
+
 void Game::load() {
     SaveBlock tempSave;
     // Read from SRAM physical address
@@ -88,11 +97,7 @@ void Game::load() {
     // 0x4742414D is "GBAM" in hex
     if (tempSave.magicSignature == 0x4742414D) {
         // Calculate the checksum of the loaded profile
-        u32 calculatedSum = 0;
-        const u8* profileBytes = (const u8*)&tempSave.profile;
-        for (u32 i = 0; i < sizeof(PlayerProfile); i++) {
-            calculatedSum += profileBytes[i];
-        }
+        u32 calculatedSum = calculateChecksum(tempSave.profile);
 
         // Verify against the stored checksum
         if (calculatedSum == tempSave.checksum) {
@@ -109,12 +114,7 @@ void Game::save() {
     newSave.profile = this->profile;
 
     // Generate checksum for the current profile state
-    u32 sum = 0;
-    const u8* profileBytes = (const u8*)&newSave.profile;
-    for (u32 i = 0; i < sizeof(PlayerProfile); i++) {
-        sum += profileBytes[i];
-    }
-    newSave.checksum = sum;
+    newSave.checksum = calculateChecksum(newSave.profile);
 
     // Write to SRAM physical address
     u8* dst = (u8*)sram_mem;

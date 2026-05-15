@@ -67,6 +67,8 @@ public:
     PlayerProfile profile;
 private:
     GameState* currentState;
+
+    static u32 calculateChecksum(const PlayerProfile& profile);
 };
 
 #endif // GAME_H
