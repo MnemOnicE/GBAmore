@@ -19,8 +19,8 @@ void itoa(int n, char s[], size_t size) {
         temp[i++] = '-';
 
     size_t destIdx = 0;
-    while (i > 0 && destIdx < size - 1) {
-        s[destIdx++] = temp[--i];
+    for (int j = i - 1; j >= 0 && destIdx < size - 1; j--) {
+        s[destIdx++] = temp[j];
     }
     s[destIdx] = '\0';
 }

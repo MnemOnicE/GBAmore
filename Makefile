@@ -2,26 +2,7 @@
 .SUFFIXES:
 #---------------------------------------------------------------------------------
 
-ifneq ($(MAKECMDGOALS),test)
-ifeq ($(strip $(DEVKITARM)),)
-$(error "Please set DEVKITARM in your environment. export DEVKITARM=<path to>devkitARM")
-endif
-
-include $(DEVKITARM)/gba_rules
-endif
-
-#---------------------------------------------------------------------------------
 # TARGET is the name of the output
-# BUILD is the directory where object files & intermediate files will be placed
-# SOURCES is a list of directories containing source code
-# INCLUDES is a list of directories containing extra header files
-# DATA is a list of directories containing binary data
-# GRAPHICS is a list of directories containing files to be processed by grit
-#
-# All directories are specified relative to the project directory where
-# the makefile is found
-#
-#---------------------------------------------------------------------------------
 TARGET := GBAmore
 BUILD		:= build
 SOURCES		:= source
@@ -29,6 +10,20 @@ INCLUDES	:= include
 DATA		:=
 GRAPHICS	:= graphics
 MUSIC		:= audio
+
+.PHONY: all $(BUILD) clean test
+
+#---------------------------------------------------------------------------------
+all: $(BUILD)
+
+#---------------------------------------------------------------------------------
+ifneq ($(MAKECMDGOALS),test)
+ifeq ($(strip $(DEVKITARM)),)
+$(error "Please set DEVKITARM in your environment. export DEVKITARM=<path to>devkitARM")
+endif
+
+include $(DEVKITARM)/gba_rules
+endif
 
 #---------------------------------------------------------------------------------
 # options for code generation
