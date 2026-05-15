@@ -1,7 +1,9 @@
 #include "Utils.h"
 #include <stddef.h>
 
-void itoa(int n, char s[]) {
+void itoa(int n, char s[], size_t size) {
+    if (size == 0) return;
+    char temp[32];
     int i, sign;
     unsigned int num;
     if ((sign = n) < 0) {
@@ -11,18 +13,16 @@ void itoa(int n, char s[]) {
     }
     i = 0;
     do {
-        s[i++] = num % 10 + '0';
+        temp[i++] = num % 10 + '0';
     } while ((num /= 10) > 0);
     if (sign < 0)
-        s[i++] = '-';
-    s[i] = '\0';
+        temp[i++] = '-';
 
-    int j, c;
-    for (j = 0, i = i - 1; j < i; j++, i--) {
-        c = s[j];
-        s[j] = s[i];
-        s[i] = c;
+    size_t destIdx = 0;
+    while (i > 0 && destIdx < size - 1) {
+        s[destIdx++] = temp[--i];
     }
+    s[destIdx] = '\0';
 }
 
 void strConcat(char* dest, size_t destCap, const char* src1, const char* src2, const char* src3) {
