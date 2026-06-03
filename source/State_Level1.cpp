@@ -1,5 +1,7 @@
 #include "State_Level1.h"
 #include "Game.h"
+
+State_Level1 State_Level1::instance;
 #include "UI.h"
 #include <tonc.h>
 

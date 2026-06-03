@@ -16,22 +16,20 @@ Game::Game() : currentState(nullptr) {
 Game::~Game() {
     if (currentState) {
         currentState->teardown();
-        delete currentState;
     }
 }
 
 /**
  * @brief Replace the game's current state with a new state and initialize it.
  *
- * If a current state exists, it is torn down and deleted before assignment.
+ * If a current state exists, it is torn down before assignment.
  * After assigning `newState`, the state's `init(this)` is called when `newState` is non-null.
  *
- * @param newState Pointer to the new GameState to become the active state. Ownership is transferred to the Game; the Game will call `teardown()` and delete the previous state if present. Passing `nullptr` clears the current state.
+ * @param newState Pointer to the new GameState to become the active state. The Game will call `teardown()` on the previous state if present. Passing `nullptr` clears the current state.
  */
 void Game::changeState(GameState* newState) {
     if (currentState) {
         currentState->teardown();
-        delete currentState; // Assuming the game owns the state memory and states are dynamically allocated. For now, we assume simple pointer transfer
     }
 
     currentState = newState;
