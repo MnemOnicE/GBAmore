@@ -1,11 +1,10 @@
 #include "State_Menu.h"
 #include "State_Level1.h"
 
+State_Menu State_Menu::instance;
 #include "Game.h"
 #include "UI.h"
 #include <tonc.h>
-
-State_Menu State_Menu::instance;
 
 /**
  * @brief Construct a new State_Menu instance.

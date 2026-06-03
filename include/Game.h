@@ -23,6 +23,8 @@
  * Replace the active game state with a new state.
  *
  * @param newState Pointer to the GameState that should become the active state.
+ *                 The Game object does not take ownership of this pointer.
+ *                 The caller is responsible for ensuring the state's lifetime.
  */
 
 /**
