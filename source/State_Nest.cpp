@@ -1,5 +1,6 @@
 #include "State_Nest.h"
 #include "State_Level1.h"
+#include "State_Map.h"
 #include "Game.h"
 #include "UI.h"
 #include "Utils.h"
@@ -14,6 +15,8 @@ const int RING_ZONE_X = 50;
 const int RING_ZONE_Y = 100;
 const int DOOR_ZONE_X = 140;
 const int DOOR_ZONE_Y = 100;
+const int CLOCK_ZONE_X = 100;
+const int CLOCK_ZONE_Y = 40;
 
 
 State_Nest State_Nest::instance;
@@ -26,6 +29,7 @@ State_Nest::~State_Nest() {
 
 static void drawLabels() {
     UI::print(16, 16, "Bed (Save)");
+    UI::print(100, 16, "Clock");
     UI::print(160, 16, "TV (Lore)");
     UI::print(16, 128, "Ring (Agates)");
     UI::print(160, 128, "Door (Level 1)");
@@ -66,6 +70,11 @@ void State_Nest::update() {
         return;
     }
 
+    if (key_hit(KEY_START) || key_hit(KEY_SELECT)) {
+        game->changeState(&State_Map::instance);
+        return;
+    }
+
     // Direct coordinate mutation
     if (key_is_down(KEY_UP))    player_y -= 2;
     if (key_is_down(KEY_DOWN))  player_y += 2;
@@ -90,6 +99,11 @@ void State_Nest::update() {
             game->save();
             UI::clear();
             UI::print(64, 72, "Game Saved.");
+            interacting = true;
+        } else if (player_x > CLOCK_ZONE_X && player_x < TV_ZONE_X && player_y < CLOCK_ZONE_Y) {
+            // Clock
+            UI::clear();
+            UI::print(64, 72, "Tick tock...");
             interacting = true;
         } else if (player_x > TV_ZONE_X && player_y < TV_ZONE_Y) {
             // TV

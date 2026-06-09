@@ -57,6 +57,18 @@ void test_strConcat() {
     strConcat(buf, sizeof(buf), "", "", "");
     assert(std::strcmp(buf, "") == 0);
     std::cout << "  strConcat(empty strings) passed" << std::endl;
+
+    buf[0] = 'X';
+    buf[1] = '\0';
+    strConcat(buf, sizeof(buf), nullptr, "World", nullptr);
+    assert(buf[0] == '\0');
+    std::cout << "  strConcat(null src1) early return null-termination passed" << std::endl;
+
+    buf[0] = 'X';
+    buf[1] = '\0';
+    strConcat(buf, sizeof(buf), "Hello", nullptr, nullptr);
+    assert(buf[0] == '\0');
+    std::cout << "  strConcat(null src2) early return null-termination passed" << std::endl;
 }
 
 int main() {
