@@ -9,13 +9,15 @@ jobs:
   release:
     runs-on: ubuntu-latest
     container: devkitpro/devkitarm
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Compile the game
-        run: make
+        run: make clean && make
 
       - name: Create Release and Upload ROM
         uses: softprops/action-gh-release@v2

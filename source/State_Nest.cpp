@@ -71,7 +71,6 @@ void State_Nest::update() {
     }
 
     if (key_hit(KEY_START) || key_hit(KEY_SELECT)) {
-        State_Map::instance.setReturnState(this);
         game->changeState(&State_Map::instance);
         return;
     }

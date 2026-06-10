@@ -10,6 +10,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container: devkitpro/devkitarm
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
     - name: Checkout repository
@@ -19,7 +21,7 @@ jobs:
       run: make test
 
     - name: Compile the game
-      run: make
+      run: make clean && make
 
     - name: Set Short Hash
       run: |
