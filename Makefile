@@ -2,30 +2,28 @@
 .SUFFIXES:
 #---------------------------------------------------------------------------------
 
-ifeq ($(strip $(DEVKITARM)),)
-$(error "Please set DEVKITARM in your environment. export DEVKITARM=<path to>devkitARM")
-endif
-
-include $(DEVKITARM)/gba_rules
-
-#---------------------------------------------------------------------------------
 # TARGET is the name of the output
-# BUILD is the directory where object files & intermediate files will be placed
-# SOURCES is a list of directories containing source code
-# INCLUDES is a list of directories containing extra header files
-# DATA is a list of directories containing binary data
-# GRAPHICS is a list of directories containing files to be processed by grit
-#
-# All directories are specified relative to the project directory where
-# the makefile is found
-#
-#---------------------------------------------------------------------------------
 TARGET := GBAmore
 BUILD		:= build
 SOURCES		:= source
 INCLUDES	:= include
 DATA		:=
-MUSIC		:=
+GRAPHICS	:= graphics
+MUSIC		:= audio
+
+.PHONY: all $(BUILD) clean test
+
+#---------------------------------------------------------------------------------
+all: $(BUILD)
+
+#---------------------------------------------------------------------------------
+ifneq ($(MAKECMDGOALS),test)
+ifeq ($(strip $(DEVKITARM)),)
+$(error "Please set DEVKITARM in your environment. export DEVKITARM=<path to>devkitARM")
+endif
+
+include $(DEVKITARM)/gba_rules
+endif
 
 #---------------------------------------------------------------------------------
 # options for code generation
@@ -41,19 +39,19 @@ CFLAGS	+=	$(INCLUDE)
 CXXFLAGS	:=	$(CFLAGS) -fno-rtti -fno-exceptions
 
 ASFLAGS	:=	-g $(ARCH)
-LDFLAGS	=	-g $(ARCH) -Wl,-Map,$(notdir $*.map)
+LDFLAGS := -specs=gba.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map)
 
 #---------------------------------------------------------------------------------
 # any extra libraries we wish to link with the project
 #---------------------------------------------------------------------------------
-LIBS := -ltonc
+LIBS := -ltonc -lmm
 
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing
 # include and lib
 #---------------------------------------------------------------------------------
-LIBDIRS	:=	$(LIBGBA)
+LIBDIRS	:=	$(LIBGBA) $(DEVKITPRO)/libtonc $(DEVKITPRO)/libmaxmod
 
 #---------------------------------------------------------------------------------
 # no real need to edit anything past this point unless you need to add additional
@@ -68,7 +66,8 @@ export OUTPUT	:=	$(CURDIR)/$(TARGET)
 
 export VPATH	:=	$(foreach dir,$(SOURCES),$(CURDIR)/$(dir)) \
 			$(foreach dir,$(DATA),$(CURDIR)/$(dir)) \
-			$(foreach dir,$(GRAPHICS),$(CURDIR)/$(dir))
+			$(foreach dir,$(GRAPHICS),$(CURDIR)/$(dir)) \
+			$(CURDIR)/$(BUILD)
 
 export DEPSDIR	:=	$(CURDIR)/$(BUILD)
 
@@ -96,21 +95,33 @@ else
 endif
 #---------------------------------------------------------------------------------
 
+
+#---------------------------------------------------------------------------------
+# build a list of auto-generated c files
+#---------------------------------------------------------------------------------
+
 export OFILES_BIN := $(addsuffix .o,$(BINFILES))
 
 export OFILES_SOURCES := $(CPPFILES:.cpp=.o) $(CFILES:.c=.o) $(SFILES:.s=.o)
 
-export OFILES := $(OFILES_BIN) $(OFILES_SOURCES)
+export OFILES := $(OFILES_BIN) $(OFILES_SOURCES) chipmunk.o bg_level1.o shadow.o
 
-export HFILES := $(addsuffix .h,$(subst .,_,$(BINFILES)))
-
+export HFILES := $(addsuffix .h,$(subst .,_,$(BINFILES))) chipmunk.h bg_level1.h shadow.h
 export INCLUDE	:=	$(foreach dir,$(INCLUDES),-iquote $(CURDIR)/$(dir)) \
 					$(foreach dir,$(LIBDIRS),-I$(dir)/include) \
 					-I$(CURDIR)/$(BUILD)
 
 export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib)
 
-.PHONY: $(BUILD) clean
+.PHONY: $(BUILD) clean test all
+
+all: $(BUILD)
+
+#---------------------------------------------------------------------------------
+test:
+	g++ -Iinclude source/Utils.cpp tests/test_utils.cpp -o test_suite
+	./test_suite
+	rm test_suite
 
 #---------------------------------------------------------------------------------
 $(BUILD):
@@ -133,6 +144,8 @@ else
 $(OUTPUT).gba	:	$(OUTPUT).elf
 
 $(OUTPUT).elf	:	$(OFILES)
+	@echo linking $(notdir $@)
+	@$(LD) $(LDFLAGS) $(OFILES) $(LIBPATHS) $(LIBS) -o $@
 
 $(OFILES_SOURCES) : $(HFILES)
 
@@ -157,7 +170,17 @@ soundbank.bin soundbank.h : $(AUDIOFILES)
 	@$(bin2o)
 
 
+#---------------------------------------------------------------------------------
+# custom rules for processing graphics
+#---------------------------------------------------------------------------------
+%.s %.h : %.bmp %.grit
+	grit $< -fts -o$*
+
+%.s %.h : %.png %.grit
+	grit $< -fts -o$*
+
+
+#---------------------------------------------------------------------------------
 -include $(DEPSDIR)/*.d
 #---------------------------------------------------------------------------------------
 endif
-#---------------------------------------------------------------------------------------

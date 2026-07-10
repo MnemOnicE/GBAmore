@@ -13,6 +13,8 @@ void UI::init() {
 
     // Initialize the Tonc Text Engine (TTE) for a 4bpp character background
     tte_init_se_default(0, BG_CBB(0) | BG_SBB(31));
+
+    pal_bg_mem[0] = CLR_BLACK;
 }
 
 /**

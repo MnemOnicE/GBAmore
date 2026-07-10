@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include "GameState.h"
+#include <tonc.h>
 
 /**
  * Game class that manages the active GameState and provides lifecycle operations.
@@ -38,6 +39,20 @@
 /**
  * Pointer to the currently active GameState.
  */
+struct PlayerProfile {
+    int agatesCollected;
+    bool canDash;
+    bool exploredRooms[8][8];
+    int currentRoomX;
+    int currentRoomY;
+};
+
+struct SaveBlock {
+    int magicSignature;
+    PlayerProfile profile;
+    u32 checksum; // Added for integrity validation
+};
+
 class Game {
 public:
     Game();
@@ -48,8 +63,14 @@ public:
     void update();
     void draw();
 
+    void save();
+    void load();
+
+    PlayerProfile profile;
 private:
     GameState* currentState;
+
+    static u32 calculateChecksum(const PlayerProfile& profile);
 };
 
 #endif // GAME_H

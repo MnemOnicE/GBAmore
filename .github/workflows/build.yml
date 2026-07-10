@@ -15,12 +15,20 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    - name: Run tests
+      run: make test
+
     - name: Compile the game
       run: make
+
+    - name: Set Short Hash
+      run: |
+        SHORT_HASH=$(echo "${GITHUB_SHA}" | cut -c1-7)
+        echo "SHORT_HASH=${SHORT_HASH}" >> $GITHUB_ENV
 
     - name: Upload GBA Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: GBAmore-ROM
-        path: GBAmore.gba
+        name: GBAmore-${{ env.SHORT_HASH }}
+        path: ${{ github.workspace }}/*.gba
         if-no-files-found: error

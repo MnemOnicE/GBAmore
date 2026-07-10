@@ -1,3 +1,4 @@
+#include "State_Nest.h"
 #include "State_Menu.h"
 #include "State_Level1.h"
 
@@ -5,6 +6,7 @@ State_Menu State_Menu::instance;
 #include "Game.h"
 #include "UI.h"
 #include <tonc.h>
+State_Menu State_Menu::instance;
 
 /**
  * @brief Construct a new State_Menu instance.
@@ -34,6 +36,9 @@ State_Menu::~State_Menu() {
 void State_Menu::init(Game* gameContext) {
     this->game = gameContext;
 
+    // Disable objects completely, as this is a pure text menu
+    REG_DISPCNT &= ~(DCNT_OBJ | DCNT_OBJ_1D);
+
     // Clear screen
     UI::clear();
 
@@ -43,13 +48,15 @@ void State_Menu::init(Game* gameContext) {
 }
 
 /**
- * @brief Polls input and transitions the game's state to Level 1 when START is pressed.
+ * @brief Polls input and transitions the game's state to the Nest when START is pressed.
  *
- * When the START button is detected, replaces the current game state with a new State_Level1 instance.
+ * When the START button is detected, replaces the current game state with the State_Nest instance.
+ * When the START button is detected, replaces the current game state with the State_Nest::instance.
  */
 void State_Menu::update() {
     if (key_hit(KEY_START)) {
         game->changeState(&State_Level1::instance);
+        game->changeState(&State_Nest::instance);
     }
 }
 
