@@ -40,6 +40,7 @@ Game::~Game() {
  * If a current state exists, it is torn down before assignment.
  * After assigning `newState`, the state's `init(this)` is called when `newState` is non-null.
  *
+ * @param newState Pointer to the new GameState to become the active state. The Game will call `teardown()` on the previous state if present. Passing `nullptr` clears the current state.
  * @param newState Pointer to the new GameState to become the active state. Game does not assume ownership of state memory; caller is responsible for lifetime. Passing `nullptr` clears the current state.
  */
 void Game::changeState(GameState* newState) {

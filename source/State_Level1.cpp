@@ -4,6 +4,8 @@
 #include "State_Nest.h"
 #include "State_Map.h"
 #include "Game.h"
+
+State_Level1 State_Level1::instance;
 #include "UI.h"
 #include "chipmunk.h"
 #include "shadow.h"

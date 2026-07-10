@@ -43,6 +43,7 @@ struct Entity {
 class State_Level1 : public GameState {
 public:
     static State_Level1 instance;
+
     State_Level1();
     ~State_Level1();
 
